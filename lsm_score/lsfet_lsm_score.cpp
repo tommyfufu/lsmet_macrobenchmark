@@ -13,7 +13,7 @@ public:
     questions(string str_qu, int app, int se, int sm, int tomo);
     questions(string str_qu, int ops_num, int sequence);
     void muti_user_input_then_adjust_scoreboard();
-    void tf_user_input_then_adjust_scoreboard();
+    int tf_user_input_then_adjust_scoreboard(int seq);
 
 private:
     int options_num, sequence_in_ques_list;
@@ -42,43 +42,41 @@ questions::questions(string str_qu, int ops_num, int sequence)
         }
     }
 }
-void questions::tf_user_input_then_adjust_scoreboard()
+int questions::tf_user_input_then_adjust_scoreboard(int seq)
 {
-    for (int i = 0; i < tf_questions_list.size(); i++)
-    {
-        char ans = '\0';
 
-        cout << tf_questions_list[i].str_question << endl;
-        cin >> ans;
-        cout << "Your input: " << ans << endl
-             << endl;
-        if (ans == 'T' || ans == 't')
-        {
-            score_lsm_array[num_apparmor].score += tf_questions_list[i].ans[num_apparmor][0];
-            score_lsm_array[num_selinux].score += tf_questions_list[i].ans[num_selinux][0];
-            score_lsm_array[num_smack].score += tf_questions_list[i].ans[num_smack][0];
-            score_lsm_array[num_tomoyo].score += tf_questions_list[i].ans[num_tomoyo][0];
-            print_lsm_scoreboard();
-            cout << endl;
-        }
-        else if (ans == 'f' || ans == 'F')
-        {
-            print_lsm_scoreboard();
-            cout << endl;
-        }
-        else
-        {
-            cout << "Wrong intput! Please input [Y/y | N/n]" << endl;
-            i--;
-        }
+    char input = '\0';
+    cout << seq << ". " << str_question << endl;
+    cin >> input;
+    cout << "Your input: " << input << endl
+         << endl;
+    if (input == 'T' || input == 't')
+    {
+        score_lsm_array[num_apparmor].score += ans[num_apparmor][0];
+        score_lsm_array[num_selinux].score += ans[num_selinux][0];
+        score_lsm_array[num_smack].score += ans[num_smack][0];
+        score_lsm_array[num_tomoyo].score += ans[num_tomoyo][0];
+        print_lsm_scoreboard();
+        cout << endl;
     }
+    else if (input == 'f' || input == 'F')
+    {
+        print_lsm_scoreboard();
+        cout << endl;
+    }
+    else
+    {
+        cout << "Wrong intput! Please input [Y/y | N/n]" << endl;
+        return 1;
+    }
+    return 0;
 }
 void questions::muti_user_input_then_adjust_scoreboard()
 {
     string in = "0";
     int a;
     cin >> in;
-    int j = 0;
+    int j;
 
     while (in == " ")
         cin >> in;
@@ -86,19 +84,51 @@ void questions::muti_user_input_then_adjust_scoreboard()
     for (j = 0; j < in.size(); j++)
     {
         a = in[j] - '0';
-        if (a > options_num)
+        if (a == 0)
+        {
+            cout << "[none] "<< endl;
+            j = in.size();
+        }
+        else if (a > options_num)
+        {
             cout << "Wrong input! : " << a << endl
                  << "Scoreboard not adjusted" << endl;
-        a--;
-        score_lsm_array[num_apparmor].score += (ans[num_apparmor][a] & 1);
-        score_lsm_array[num_selinux].score += (ans[num_selinux][a] & 1);
-        score_lsm_array[num_smack].score += (ans[num_smack][a] & 1);
-        score_lsm_array[num_tomoyo].score += (ans[num_tomoyo][a] & 1);
-        print_lsm_scoreboard();
+        }
+        else
+        {
+            a--;
+            score_lsm_array[num_apparmor].score += (ans[num_apparmor][a] & 1);
+            score_lsm_array[num_selinux].score += (ans[num_selinux][a] & 1);
+            score_lsm_array[num_smack].score += (ans[num_smack][a] & 1);
+            score_lsm_array[num_tomoyo].score += (ans[num_tomoyo][a] & 1);
+        }
     }
+    print_lsm_scoreboard();
 }
 
 vector<questions> muti_questions_list, tf_questions_list;
+
+int main(int argc, char *argv[])
+{
+    os_init();
+    ques_init();
+    cout << beginning;
+    cout << "-----------------------------------" << endl;
+    printf("Start case 1 - Trivial Questions\n************************\n");
+    trivial_q();
+    cout << "end of case 1 questions\n************************\n";
+    cout << "-----------------------------------" << endl;
+    printf("Start case 2 - Complex Questions\n");
+    complex_q();
+    cout << "end of case 2 questions\n************************\n";
+    cout << "-----------------------------------" << endl;
+    printf("Start case 3 - Developer Request\n************************\n");
+    if (envir_req())
+        cout << "bad selection";
+    cout << "end of case 3 questions\n************************\n";
+    cout << "-----------------------------------" << endl;
+    return 0;
+}
 void os_init()
 {
     ur_os = new dis_struct;
@@ -173,19 +203,23 @@ void ques_init()
     questions cach_req(caches_req, 0, 1, 0, 0);
     questions log_sup_policy(str_log_support_policy, 1, 1, 0, 0);
     questions dynmaic_load_policy(str_dynamically_load_policy, 1, 1, 1, 1);
-    questions auto_policy(str_configurable_aduit, 0, 1, 1, 0);
+    questions config_audit(str_configurable_aduit, 0, 1, 1, 0);
     questions default_policy(str_default_policy, 0, 1, 1, 0);
+
+    // +2 security q
+    questions secur_auditing(str_security_auditing, 2, 2, 2, 2);
+    questions sup_type(str_support_tpe, 0, 2, 0, 2);
+    questions sup_whitlist(str_whitelist, 2, 2, 0, 2);
+
     tf_questions_list.push_back(auto_policy);
     tf_questions_list.push_back(cach_req);
     tf_questions_list.push_back(log_sup_policy);
     tf_questions_list.push_back(dynmaic_load_policy);
-    tf_questions_list.push_back(auto_policy);
+    tf_questions_list.push_back(config_audit);
     tf_questions_list.push_back(default_policy);
-
-    // +2 security q
-    push_trivial_quest_list(str_security_auditing, 2, 2, 2, 2);
-    push_trivial_quest_list(str_support_tpe, 0, 2, 0, 2);
-    push_trivial_quest_list(str_whitelist, 2, 2, 0, 2);
+    tf_questions_list.push_back(secur_auditing);
+    tf_questions_list.push_back(sup_type);
+    tf_questions_list.push_back(sup_whitlist);
 
     /***************Complex Questions*******************/
     questions secu_models(str_support_security_models, 4, 1);
@@ -200,46 +234,15 @@ void ques_init()
 
     // push_quest_list(str_file_system_support_xattr, 0, -1, -1, 0);
 }
-// void push_os_list(dis_struct *os)
-// {
-//     os_list.push_back(*os);
-// }
-// void push_trivial_quest_list(string question, int app, int se, int sm, int tomo)
-// {
-//     ques_struct tmp;
-//     tmp.questions = question;
-//     tmp.weight[num_apparmor] = app;
-//     tmp.weight[num_selinux] = se;
-//     tmp.weight[num_smack] = sm;
-//     tmp.weight[num_tomoyo] = tomo;
-//     tf_questions_list.push_back(tmp);
-// }
-
-int main(int argc, char *argv[])
-{
-    os_init();
-    ques_init();
-    cout << beginning;
-    printf("Start case 1 - Trivial Questions\n");
-    trivial_q();
-    cout << "end of case 1 questions\n************************\n";
-
-    printf("Start case 2 - Complex Questions\n");
-    complex_q();
-
-    printf("Start case 3 - Developer Request\n");
-    if (envir_req())
-        cout << "bad selection";
-
-    return 0;
-}
 
 int complex_q()
 {
-    cout << complex_rule << endl;
+    int seq = 0;
+    cout << "/*****" << complex_rule << "*****/" << endl;
     for (int i = 0; i < muti_questions_list.size(); i++)
     {
-        cout << muti_questions_list[i].str_question << endl;
+        seq = i + 1;
+        cout << seq << ". " << muti_questions_list[i].str_question << endl;
         muti_questions_list[i].muti_user_input_then_adjust_scoreboard();
     }
     return 0;
@@ -247,23 +250,20 @@ int complex_q()
 
 int trivial_q()
 {
-    bool stat = true;
-    tq_manage_plus1();
-    if (stat)
-        return 0;
-    else
-        return 1;
-}
-void tq_manage_plus1()
-{
-    bool ret = true;
+    int ret = 0;
+    int seq = 0;
+    cout << "/*****" << trviial_rule << "*****/" << endl
+         << endl;
+    for (int i = 0; i < tf_questions_list.size(); i++)
+    {
+        seq = i + 1;
+        ret = tf_questions_list[i].tf_user_input_then_adjust_scoreboard(seq);
+        if (ret)
+            i--;
+    }
+    return 0;
 }
 
-bool tq_security_plus2()
-{
-    return true;
-}
-// bool tq_lsm_request_minus1();
 int envir_req()
 {
     bool stat = true;

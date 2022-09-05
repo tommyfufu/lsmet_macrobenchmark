@@ -69,6 +69,9 @@ static int muti_ans_array[MUTI_ANS_QUESTIONS_NUM][LSMs_NUM][MAX_OPS] = {
 };
 
 string beginning = "Hello! Welcome to use LSFET - Linux Security Framework Evaluation Tool\nWe will ask you some questions to help us init criteria, which will help you find the best LSM.\n";
+
+// class 1 -trivial questions string
+string trviial_rule = "Please key in [T/t]ure or [F/f]alse then press enter";
 string str_autopolicy = "Want LSM supports Automatic policy? [T/F]";
 string caches_req = "Want LSM supports caches? [T/F]";
 string str_log_support_policy = "Want LSM supports log edit policy? [T/F]";
@@ -80,14 +83,14 @@ string str_support_tpe = "Want LSM supports trust path execution? [T/F]";
 string str_whitelist = "Want LSM supports whitelist? [T/F]";
 string str_file_system_support_xattr = "Does File System support extended attributes? [T/F]";
 
-// complex questions string
-string complex_rule = "Please key in your options continually then press Enter (e.g. if you want to select option 1, 3, 4, please key in 134 then press Enter\n)\n";
-string str_support_security_models = "Which security models do you want? [1]DTE [2]FLASK [3]MLS [4]RBAC";
-string str_support_virtualization = "Which virtualization technique do you want to support? [1]libvirt [2]KVM [3]QEMU [4]Xen [5]sVirt [6]Docker";
-string str_fit_security_certifications = "What kind of certifications you want your LSM fit? [1]CAPP [2]EAL [3]LSPP";
-string str_configuration_type = "What kind of configuration type you want to use? [1]ACL [2]C-like [3]CUI [4]DIT";
+// class 2 - complex questions string
+string complex_rule = "Please key in your options continually then press Enter (e.g. if you want to select option 1, 3, 4, please key in 134 then press Enter)";
+string str_support_security_models = "Which security models do you want? [0]none [1]DTE [2]FLASK [3]MLS [4]RBAC";
+string str_support_virtualization = "Which virtualization technique do you want to support? [0]none [1]libvirt [2]KVM [3]QEMU [4]Xen [5]sVirt [6]Docker";
+string str_fit_security_certifications = "What kind of certifications you want your LSM fit? [0]none [1]CAPP [2]EAL [3]LSPP";
+string str_configuration_type = "What kind of configuration type you want to use? [0]none [1]ACL [2]C-like [3]CUI [4]DIT";
 
-// environmental questions string
+// class 3 - environmental questions string
 string does_insert_into_kerenl = "Checking LSMs hasn't been inserted into the kernel";
 string does_distrib_support_lsm = "Checking your distribution Linux whether supports LSMs";
 string better_lsm = "Your distribution does not support ";
