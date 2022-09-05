@@ -1,0 +1,4 @@
+apparmor_status
+apparmor_status
+apparmor_status
+apparmor_status
