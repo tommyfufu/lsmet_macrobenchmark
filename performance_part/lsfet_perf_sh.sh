@@ -13,15 +13,28 @@ function apache_enable(){
         echo "Ubuntu"
         apt update && sudo apt install apache2 -y
         apt install libapache2-mod-apparmor
-        sleep 10
+        sleep 5
         ufw allow in "Apache Full"
         ufw enable
     elif [ "${1}" == "CentOS" ]; then
-        yum install httpd -y; sleep 10; systemctl start httpd; systemctl enable httpd;
-        sleep 10
+        yum install httpd -y; sleep 10; systemctl start httpd; sleep 1; systemctl enable httpd;
+        sleep 5
         firewall-cmd --permanent --add-service=http
-        sleep 10
-        sudo firewall-cmd --reload
+        sleep 5
+        firewall-cmd --reload
+    elif [ "${1}" == "openSUSE" ]; then
+        zypper refresh; zypper update; zypper install apache2 -y ;systemctl enable apache2;
+        sleep 5
+        firewall-cmd --permanent --add-service=http --add-service=https
+        sleep 5
+        firewall-cmd --reload
+    elif [ "${1}" == "alpine" ]; then
+        apk update; sleep 2; apk upgrade; sleep 2; apk add apache2 -y; sleep 2; rc-service apache2 start; sleep 2; rc-update add apache2;
+        sleep 5
+        firewall-cmd --permanent --add-service=http --add-service=https
+        sleep 5
+        firewall-cmd --reload
+        apk add apache2-utils
     else
         echo "Other OSes"
     fi
