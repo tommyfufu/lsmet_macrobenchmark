@@ -117,7 +117,7 @@ if [ ${mydistrib} == 'CentOS' ]; then
         fi
 fi
 
-if [ ${mylsm} == apparmor_status' ]; then
+if [ ${mylsm} == 'apparmor_status' ]; then
     echo "AppArmor"
     echo "====="
     systemctl is-active apparmor.service > lsmstat.txt
