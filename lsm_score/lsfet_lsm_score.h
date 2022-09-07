@@ -56,6 +56,16 @@ struct scoreboard_col
     int score;
 };
 
+struct score_config
+{
+    int tr_m;
+    int tr_s;
+    int co_m;
+    int co_s;
+    int en_m;
+    int en_un;
+};
+
 static int muti_ans_array[MUTI_ANS_QUESTIONS_NUM][LSMs_NUM][MAX_OPS] = {
     // q1-Supports security models - DTE、FLASK、MLS、RBAC
     {{0, 0, 0, 0}, {0, 1, 1, 1}, {1, 0, 1, 0}, {0, 0, 0, 0}},

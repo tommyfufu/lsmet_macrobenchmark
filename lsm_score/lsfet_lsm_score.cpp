@@ -86,7 +86,7 @@ void questions::muti_user_input_then_adjust_scoreboard()
         a = in[j] - '0';
         if (a == 0)
         {
-            cout << "[none] "<< endl;
+            cout << "[none] " << endl;
             j = in.size();
         }
         else if (a > options_num)
@@ -192,13 +192,27 @@ void os_init()
 void ques_init()
 {
     /***************Trivial Questions*******************/
-    //+1 manage q
-    // push_trivial_quest_list(str_autopolicy, 1, 0, 0, 1);
-    // push_trivial_quest_list(caches_req, 0, 1, 0, 0);
-    // push_trivial_quest_list(str_log_support_policy, 1, 1, 0, 0);
-    // push_trivial_quest_list(str_dynamically_load_policy, 1, 1, 1, 1);
-    // push_trivial_quest_list(str_configurable_aduit, 0, 1, 1, 0);
-    // push_trivial_quest_list(str_default_policy, 0, 1, 1, 0);
+    string config_line;
+    struct score_config score_weight_conf
+    ifstream fin("./score.conf");
+    if (!fin)
+    {
+        cout << "open file failed!" << endl;
+        exit(1);
+        while (getline(fin, config_line))
+        {
+            istringstream fin(config_line.substr(config_line.find("=") + 1));
+            if (config_line.find("num") != -1)
+                fin >> config.num;
+            else if (config_line.find("str") != -1)
+                fin >> config.str;
+            else if (config_line.find("flt") != -1)
+                fin >> config.flt;
+        }
+    }
+
+    fin.close();
+
     questions auto_policy(str_autopolicy, 1, 0, 0, 1);
     questions cach_req(caches_req, 0, 1, 0, 0);
     questions log_sup_policy(str_log_support_policy, 1, 1, 0, 0);

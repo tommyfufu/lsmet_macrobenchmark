@@ -117,7 +117,7 @@ if [ ${mydistrib} == 'CentOS' ]; then
         fi
 fi
 
-if [ ${mylsm} == 'apparmor_status' ]; then
+if [ ${mylsm} == apparmor_status' ]; then
     echo "AppArmor"
     echo "====="
     systemctl is-active apparmor.service > lsmstat.txt
@@ -128,11 +128,11 @@ if [ ${mylsm} == 'apparmor_status' ]; then
         aa-complain /etc/apparmor.d/usr.bin.ab
         apparmor_parser -r /etc/apparmor.d/usr.bin.ab
         apache_bench > enable.txt
-        aa-disable /etc/apparmor.d/usr.bin.ab
-        apparmor_parser -R /etc/apparmor.d/usr.bin.ab
-        systemctl stop apparmor.service
-        systemctl disable apparmor.service
-        reboot
+        # aa-disable /etc/apparmor.d/usr.bin.ab
+        # apparmor_parser -R /etc/apparmor.d/usr.bin.ab
+        # systemctl stop apparmor.service
+        # systemctl disable apparmor.service
+        # reboot
         # systemctl is-active apparmor.service
         # apache_bench > disable.txt
         # systemctl start apparmor.service
