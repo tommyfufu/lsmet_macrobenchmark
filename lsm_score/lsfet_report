@@ -1,0 +1,134 @@
+This is your LSFET report
+After lsfet_lsm_score testing, the most suitable LSM is SELinux
+It's score is 18
+And your Distribution Ubuntu's  default LSM is AppArmor
+It's score is 6
+Fortunately, your Distribution Ubuntu does insert SELinux into the kernel
+So you don't need to remake a new kenerl
+We are starting to compare the best LSM and the default LSM based on your lsfet_lsm_score test
+There is your test and answer
+
+/----------------------------------------/
+Class 1 - Trivial questions 
+/----------------------------------------/
+----------------------------------------
+1. Want LSM has default policy? [T/F]
+Description: testing
+Your answer is: t
+----------
+The best LSM SELinux does 
+support and get 1 point
+----------
+The default LSM AppArmor does 
+not supports
+----------------------------------------
+2. Want LSM to support Automatic policy? [T/F]
+Description: testing
+Your answer is: f
+
+----------------------------------------
+3. Want LSM to support fine tuning policy based on log? [T/F]
+Description: testing
+Your answer is: t
+----------
+The best LSM SELinux does 
+support and get 1 point
+----------
+The default LSM AppArmor does 
+support1 point
+----------------------------------------
+4. Want LSM to be able to support dynamically load policy? [T/F]
+Description: testing
+Your answer is: f
+
+----------------------------------------
+5. Want LSM to support caches? [T/F]
+Description: testing
+Your answer is: t
+----------
+The best LSM SELinux does 
+support and get 1 point
+----------
+The default LSM AppArmor does 
+not supports
+----------------------------------------
+6. Want LSM to support security auditing? [T/F]
+Description: testing
+Your answer is: f
+
+----------------------------------------
+7. Want LSM to supports configurable audit? [T/F]
+Description: testing
+Your answer is: t
+----------
+The best LSM SELinux does 
+support and get 2 point
+----------
+The default LSM AppArmor does 
+not supports
+----------------------------------------
+8. Want LSM to support whitelist? [T/F]
+Description: testing
+Your answer is: f
+
+----------------------------------------
+9. Want LSM to support trust path execution? [T/F]
+Description: testing
+Your answer is: t
+----------
+The best LSM SELinux does 
+support and get 2 point
+----------
+The default LSM AppArmor does 
+not supports
+----------------------------------------
+10. Want LSM to support sandbox? [T/F]
+
+Your answer is: f
+
+----------------------------------------
+11. Want LSM to have security certifications? [T/F]
+
+Your answer is: t
+----------
+The best LSM SELinux does 
+support and get 2 point
+----------
+The default LSM AppArmor does 
+not supports
+----------------------------------------
+12. Want LSM to support memory protection? [T/F]
+
+Your answer is: f
+
+************************************************
+/----------------------------------------/
+Class 2 - Complex questions 
+/----------------------------------------/
+----------------------------------------
+1. Which security models do you want? [0]none [1]DTE [2]FLASK [3]MLS [4]RBAC
+Description: testing
+Your answer is: 1234
+----------
+The best LSM 
+SELinux
+supports 234
+----------
+The default LSM 
+AppArmor
+does not support any of your requirements
+----------
+----------------------------------------
+2. Which virtualization technique do you want to support? [0]none [1]libvirt [2]KVM [3]QEMU [4]Xen [5]sVirt [6]Docker
+Description: testing
+Your answer is: 123456
+----------
+The best LSM 
+SELinux
+supports 23456
+----------
+The default LSM 
+AppArmor
+supports 1234
+----------
+************************************************
