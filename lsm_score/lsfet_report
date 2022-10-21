@@ -1,10 +1,10 @@
 This is your LSFET report
 After lsfet_lsm_score testing, the most suitable LSM is SELinux
-It's score is 18
-And your Distribution Ubuntu's  default LSM is AppArmor
-It's score is 6
-Fortunately, your Distribution Ubuntu does insert SELinux into the kernel
-So you don't need to remake a new kenerl
+It's score is 16
+And your Distribution 's  default LSM is 
+It's score is 5
+Unfortunately, your Distribution  doesn't not insert SELinux into the kernel
+So you need to remake a new kernel that include SELinux
 We are starting to compare the best LSM and the default LSM based on your lsfet_lsm_score test
 There is your test and answer
 
@@ -108,7 +108,7 @@ Class 2 - Complex questions
 ----------------------------------------
 1. Which security models do you want? [0]none [1]DTE [2]FLASK [3]MLS [4]RBAC
 Description: testing
-Your answer is: 1234
+Your answer is: 234
 ----------
 The best LSM 
 SELinux
@@ -121,14 +121,14 @@ does not support any of your requirements
 ----------------------------------------
 2. Which virtualization technique do you want to support? [0]none [1]libvirt [2]KVM [3]QEMU [4]Xen [5]sVirt [6]Docker
 Description: testing
-Your answer is: 123456
+Your answer is: 342
 ----------
 The best LSM 
 SELinux
-supports 23456
+supports 342
 ----------
 The default LSM 
 AppArmor
-supports 1234
+supports 342
 ----------
 ************************************************
