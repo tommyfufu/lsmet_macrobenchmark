@@ -1,22 +1,28 @@
-1. Introduction of Linux Security Module (LSM)
-AppArmor
-Overview:
-    AppArmor, Application Armor, is an application-centric MAC framework built using LSM. Apparmor confines individual programs to a set of files, capabilities, network access and rlimits, collectively known as the AppArmor policy for the program, or simply as a profile.
-Application field:
-    PC, Server
-SELinux
-Overview:
-    Security-Enhanced Linux (SELinux) 
+I. Introduction of Linux Security Module (LSM)
+1. AppArmor
+    Overview:
+        AppArmor, Application Armor, is an application-centric MAC framework built using LSM. Apparmor confines individual programs to a set of files, capabilities, network access and rlimits, collectively known as the AppArmor policy for the program, or simply as a profile.
+    Application field:
+        PC, Server
+2. SELinux
+    Overview:
+        Security-Enhanced Linux (SELinux) a label-based MAC framework, that provides a hybrid of concepts and capabilities drawn from mandatory access controls, mandatory integrity controls, role-based access control (RBAC), and type enforcement architecture. 
+    Application field:
+        Server, PC
 
-Smack
-Overview:
-    Simplified Mandatory Access Control Kernel (Smack) is a Linux kernel security module that protects data and process interaction from malicious manipulation using a set of custom mandatory access control (MAC) rules, with simplicity as its main design goal.
-MAC Framework:
-    Framework of SMACK is a mix of DTE and Bell-La Padula. 
-Application field:
-    Embedded Operating System
-TOMOYO Linux:
-Overview:
-    TOMOYO Linux focuses on the behaviour of a system. Every process is created to achieve a purpose, and like an immigration officer, TOMOYO Linux allows each process to declare behaviours and resources needed to achieve their purpose. When protection is enabled, TOMOYO Linux acts like an operation watchdog, restricting each process to only the behaviours and resources allowed by the administrator.
-    
-2. 
+3. Smack
+    Overview:
+        Simplified Mandatory Access Control Kernel (Smack) is a Linux kernel security module that protects data and process interaction from malicious manipulation using a set of custom mandatory access control (MAC) rules, with simplicity as its main design goal. Framework of SMACK is a mix of DTE and Bell-La Padula.
+    Application field:
+        Embedded Operating System, IoT
+
+4. TOMOYO Linux:
+    Overview:
+        TOMOYO Linux focuses on the behaviour of a system. Every process is created to achieve a purpose, and like an immigration officer, TOMOYO Linux allows each process to declare behaviours and resources needed to achieve their purpose. When protection is enabled, TOMOYO Linux acts like an operation watchdog, restricting each process to only the behaviours and resources allowed by the administrator.
+    Application field:
+        Router, OS for static behavier 
+************************************************************************************************************************************************************************
+II. Introduction of minor Linux Security Module
+1. Lockdown
+2. Yama
+************************************************************************************************************************************************************************III. Checking Distribution Environment

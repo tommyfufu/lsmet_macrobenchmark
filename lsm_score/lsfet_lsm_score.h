@@ -4,9 +4,10 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <pwd.h>
 #include <string>
+#include <cstring>
 #include <sys/types.h>
 #include <dirent.h>
 #include <limits.h>
@@ -17,6 +18,8 @@
 #include <stdarg.h>
 #include <iosfwd>
 #include <iomanip>
+#include <sys/types.h>
+#include <sys/wait.h>
 using namespace std;
 #define QUES_CLASS 4
 #define LSMs_NUM 4
@@ -86,7 +89,7 @@ static int muti_ans_array[MUTI_ANS_QUESTIONS_NUM][LSMs_NUM][MAX_OPS] = {
 };
 
 // init and declare
-string beginning = "Hello! Welcome to use LSFET - Linux Security Framework Evaluation Tool\nWe will ask you some questions to help us init criteria, which will help you find the best LSM.\n";
+string beginning = "Hello! Welcome to use LSFET - Linux Security Framework Evaluation Tool\nWe will ask you some questions to help us init criteria, which will help you find the most suitable LSM.\n";
 string str_apparmor = "AppArmor";
 string str_selinux = "SELinux";
 string str_smack = "SMACK";
