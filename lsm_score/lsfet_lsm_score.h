@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstdlib>
@@ -141,5 +141,5 @@ bool tq_lsm_request_minus1();
 // Complex questions
 int complex_q();
 // Generate report
-int find_the_best_lsm();
+int find_the_most_suitable_lsm();
 int gen_lsfet_report(string distrb_name, int dis_lsm_num);

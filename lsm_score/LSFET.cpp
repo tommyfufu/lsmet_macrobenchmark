@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     if (argc == 1)
     {
         stage = 1;
-        read_file_to_another_file_without_append_without_append("./lsm_overview", "./lsfet_report.txt");
+        read_file_to_another_file_without_append_without_append("./lsfet_reference/lsm_overview", "./lsfet_report_dir/lsfet_report.txt");
         pid_t lsm_score_testing;
         lsm_score_testing = fork();
         if (lsm_score_testing == 0)
@@ -78,19 +78,19 @@ int main(int argc, char *argv[])
         string input_lsm = argv[1];
         if (!strcasecmp(input_lsm.c_str(), "AppArmor"))
         {
-            read_file_to_another_file_without_append_without_append("./apparmor_report", "./lsfet_report");
+            read_file_to_another_file_without_append_without_append("./apparmor_report", "./lsfet_report_dir/lsfet_report.txt");
         }
         else if (!strcasecmp(input_lsm.c_str(), "SELinux"))
         {
-            read_file_to_another_file_without_append_without_append("./selinux_report", "./lsfet_report");
+            read_file_to_another_file_without_append_without_append("./selinux_report", "./lsfet_report_dir/lsfet_report.txt");
         }
         else if (!strcasecmp(input_lsm.c_str(), "Smack"))
         {
-            read_file_to_another_file_without_append_without_append("./smack_report", "./lsfet_report");
+            read_file_to_another_file_without_append_without_append("./smack_report", "./lsfet_report_dir/lsfet_report.txt");
         }
         else if (!strcasecmp(input_lsm.c_str(), "TOMOYO"))
         {
-            read_file_to_another_file_without_append_without_append("./tomoyo_report", "./lsfet_report");
+            read_file_to_another_file_without_append_without_append("./tomoyo_report", "./lsfet_report_dir/lsfet_report.txt");
         }
         else
             cout << "No LSM named " << input_lsm << " , please input apparmor/selinux/smack/tomoyo" << endl;
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
     }
     if (stage == 4)
     {
-        int input_overhead = append_overhead_behind_lsfet_report("../performance_part/overhead", "./lsfet_report.txt");
+        int input_overhead = append_overhead_behind_lsfet_report("../performance_part/overhead", "./lsfet_report_dir/lsfet_report.txt");
         if (input_overhead == 1)
         {
             cout << "Please run lsfet_perf_sh.sh first, then you can get overhead that casued by the lsm." << endl;

@@ -1,7 +1,56 @@
+I. Introduction of Linux Security Module (LSM)
+1. AppArmor
+    Overview:
+        AppArmor, Application Armor, is an application-centric MAC framework built using LSM. Apparmor confines individual programs to a set of files, 
+        capabilities, network access and rlimits, collectively known as the AppArmor policy for the program, or simply as a profile.
+    Application field:
+        PC, Server
+2. SELinux
+    Overview:
+        Security-Enhanced Linux (SELinux) a label-based MAC framework, that provides a hybrid of concepts and capabilities drawn from mandatory access controls, 
+        mandatory integrity controls, role-based access control (RBAC), and type enforcement architecture. 
+    Application field:
+        Server, PC
+
+3. Smack
+    Overview:
+        Simplified Mandatory Access Control Kernel (Smack) is a Linux kernel security module that protects data and process interaction from malicious manipulation 
+        using a set of custom mandatory access control (MAC) rules, with simplicity as its main design goal. Framework of SMACK is a mix of DTE and Bell-La Padula.
+    Application field:
+        Embedded Operating System, IoT
+
+4. TOMOYO Linux:
+    Overview:
+        TOMOYO Linux focuses on the behaviour of a system. Every process is created to achieve a purpose, and like an immigration officer, 
+        TOMOYO Linux allows each process to declare behaviours and resources needed to achieve their purpose. When protection is enabled, 
+        TOMOYO Linux acts like an operation watchdog, restricting each process to only the behaviours and resources allowed by the administrator.
+    Application field:
+        Router, OS for static behavier 
+************************************************************************************************************************************************************************
+II. Introduction of minor Linux Security Module
+1. Capabilities
+    The LSM kernel patch moves most of the existing POSIX.1e capabilities logic into an optional security module stored in the file security/capability.c. 
+    This change allows users who do not want to use capabilities to omit this code entirely from their kernel, 
+    instead using the dummy module for traditional superuser logic or any other module that they desire. 
+    This change also allows the developers of the capabilities logic to maintain and enhance their code more freely, without needing to integrate patches back into the base kernel.
+2. Lockdown
+
+3. Yama
+    Yama is a Linux Security Module that collects system-wide DAC security protections that are not handled by the core kernel itself. 
+    This is selectable at build-time with CONFIG_SECURITY_YAMA, and can be controlled at run-time through sysctls in /proc/sys/kernel/yama
+4. LoadPin
+    LoadPin is a Linux Security Module that ensures all kernel-loaded files (modules, firmware, etc) all originate from the same filesystem, 
+    with the expectation that such a filesystem is backed by a read-only device such as dm-verity or CDROM. 
+    This allows systems that have a verified and/or unchangeable filesystem to enforce module and firmware loading restrictions without needing to sign the files individually.
+5. SafeSetID
+    SafeSetID is an LSM module that gates the setid family of syscalls to restrict UID/GID transitions from a given UID/GID to only those approved by a system-wide allowlist. 
+    These restrictions also prohibit the given UIDs/GIDs from obtaining auxiliary privileges associated with CAP_SET{U/G}ID, such as allowing a user to set up user namespace UID/GID mappings.
+************************************************************************************************************************************************************************
+III. Checking Distribution Environment
 After lsfet_lsm_score testing, the_most_suitable LSM is SELinux
-It's score is 26
+It's score is 24
 And your Distribution Ubuntu's  default LSM is AppArmor
-It's score is 11
+It's score is 10
 Fortunately, your Distribution Ubuntu does insert SELinux into the kernel
 So you don't need to remake a new kenerl
 ************************************************************************************
@@ -154,15 +203,23 @@ does not support any of your requirements
 ----------------------------------------
 2. Which virtualization technique do you want to support? [0]none [1]libvirt [2]KVM [3]QEMU [4]Xen [5]sVirt [6]Docker
 Description: LSM official website provides security support for specific virtualization technologies
-Your answer is: 13456
+Your answer is: 34
 ----------
 the_most_suitable LSM 
 SELinux
-supports 3456
+supports 34
 ----------
 The default LSM 
 AppArmor
-supports 134
+supports 34
 ----------
 ************************************************************************************
 ************************************************************************************
+V. Performance Evaluation
+Default LSM on this environment: AppArmor
+Time for LSM disabled: 174.795
+Time for LSM enabled: 151
+Overhead: 17.88%
+備註: 
+Performance Evaluation所測的是指現在運行環境所開啟的LSM，與前面測試中所提到的Default LSM與The most suitable LSM可能不同
+若想測試Default LSM與The most suitable LSM對效能的影響，請參考上面提供的連結，安裝好後再重測一次lsfet_perf_sh.sh
