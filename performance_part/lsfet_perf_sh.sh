@@ -46,7 +46,7 @@ function apache_bench(){
     local testtime
     totaltime=0
     for ((i=1; i<=5; i=i+1)); do
-        ab -n 1000000 -c 20 http://127.0.0.1/ | grep "Time taken for tests:" | cut -d" " -f 7 > result.txt
+        ab -n 1000000 -c 50 http://127.0.0.1/ | grep "Time taken for tests:" | cut -d" " -f 7 > result.txt
         testtime=$(cat result.txt)
         totaltime=$(echo "${totaltime}+${testtime}" | bc -l)
     done
@@ -125,13 +125,15 @@ if [ ${mylsm} == 'apparmor_status' ]; then
     echo ${lsmstat}
     if [ ${lsmstat} == 'active' ]; then
         echo 'Fisrt, start testing active'
-        aa-complain /etc/apparmor.d/usr.bin.ab
-        apparmor_parser -r /etc/apparmor.d/usr.bin.ab
+	cp ./reference/usr.sbin.apache2 /etc/apparmor.d/
+        aa-complain apache2
+        apparmor_parser -r /etc/apparmor.d/usr.sbin.apache2
         apache_bench > enable.txt
-        # aa-disable /etc/apparmor.d/usr.bin.ab
-        # apparmor_parser -R /etc/apparmor.d/usr.bin.ab
-        # systemctl stop apparmor.service
-        # systemctl disable apparmor.service
+        apparmor_parser -R /etc/apparmor.d/usr.sbin.apache2
+	aa-disable /etc/apparmor.d/usr.sbin.apache2       
+	systemctl stop apparmor.service
+        systemctl disable apparmor.service
+	echo 'In order to measure the disable time, please reboot'
         # reboot
         # systemctl is-active apparmor.service
         # apache_bench > disable.txt
@@ -144,9 +146,9 @@ if [ ${mylsm} == 'apparmor_status' ]; then
         apache_bench > disable.txt
         systemctl start apparmor.service
         systemctl enable apparmor.service
-        rm /etc/apparmor.d/disable/usr.bin.ab
-        aa-complain /etc/apparmor.d/usr.bin.ab
-        apparmor_parser -r /etc/apparmor.d/usr.bin.ab
+        rm /etc/apparmor.d/disable/usr.sbin.apache2
+        aa-complain /etc/apparmor.d/usr.sbin.apache2
+        apparmor_parser -r /etc/apparmor.d/usr.sbin.apache2
     else
         echo "AppArmor error"
     fi
