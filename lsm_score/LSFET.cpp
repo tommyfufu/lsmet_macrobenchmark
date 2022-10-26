@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     if (argc == 1)
     {
         stage = 1;
-        read_file_to_another_file_without_append_without_append("./lsfet_reference/lsm_overview", "./lsfet_report_dir/lsfet_report.txt");
+        read_file_to_another_file_without_append_without_append("./lsfet_reference/lsm_overview.txt", "./lsfet_report_dir/lsfet_report.txt");
         pid_t lsm_score_testing;
         lsm_score_testing = fork();
         if (lsm_score_testing == 0)
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
             stage = 3;
             int status;
             waitpid(lsm_score_testing, &status, 0);
-            //append_overhead_behind_lsfet_report("../performance_part/overhead", "./lsfet_report.txt");
+            // append_overhead_behind_lsfet_report("../performance_part/overhead", "./lsfet_report.txt");
             stage = 4;
         }
         else
@@ -78,22 +78,24 @@ int main(int argc, char *argv[])
         string input_lsm = argv[1];
         if (!strcasecmp(input_lsm.c_str(), "AppArmor"))
         {
-            read_file_to_another_file_without_append_without_append("./apparmor_report", "./lsfet_report_dir/lsfet_report.txt");
+            read_file_to_another_file_without_append_without_append("./lsfet_reference/lsm_apparmor.txt", "./lsfet_report_dir/lsfet_report.txt");
         }
         else if (!strcasecmp(input_lsm.c_str(), "SELinux"))
         {
-            read_file_to_another_file_without_append_without_append("./selinux_report", "./lsfet_report_dir/lsfet_report.txt");
+            read_file_to_another_file_without_append_without_append("./lsfet_reference/lsm_selinux.txt", "./lsfet_report_dir/lsfet_report.txt");
         }
         else if (!strcasecmp(input_lsm.c_str(), "Smack"))
         {
-            read_file_to_another_file_without_append_without_append("./smack_report", "./lsfet_report_dir/lsfet_report.txt");
+            read_file_to_another_file_without_append_without_append("./lsfet_reference/lsm_smack.txt", "./lsfet_report_dir/lsfet_report.txt");
         }
         else if (!strcasecmp(input_lsm.c_str(), "TOMOYO"))
         {
-            read_file_to_another_file_without_append_without_append("./tomoyo_report", "./lsfet_report_dir/lsfet_report.txt");
+            read_file_to_another_file_without_append_without_append("./lsfet_reference/lsm_tomoyo.txt", "./lsfet_report_dir/lsfet_report.txt");
         }
         else
             cout << "No LSM named " << input_lsm << " , please input apparmor/selinux/smack/tomoyo" << endl;
+
+        cout << "Your lsfet_report is generated, you can find it under lsfet_report_dir.\nIf you want to get the overhead of the LSM of this environment OS, run lsfet_perf_sh.sh in the ../performance/ directory." << endl;
     }
     else
     {
@@ -112,7 +114,8 @@ int main(int argc, char *argv[])
         }
         else
         {
-            cout << "overhead input successed" << endl << "LSFET final report completed, you can read lsfet_report now" << endl;
+            cout << "overhead input successed" << endl
+                 << "LSFET final report completed, you can read lsfet_report now" << endl;
         }
     }
     return 0;

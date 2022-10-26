@@ -510,7 +510,7 @@ int gen_lsfet_report(string distrb_name, int dis_lsm_num)
     }
     else
     {
-        of << "And your Distribution " << distrb_name << "'s  default LSM is " << ur_os->lsm << endl
+        of << "And your Distribution " << distrb_name << ", the default LSM is " << ur_os->lsm << endl
            << "It's score is " << score_lsm_array[dis_lsm_num].score << endl;
         flag_dont_need_to_show_default_lsm = 0;
     }
@@ -555,9 +555,9 @@ int gen_lsfet_report(string distrb_name, int dis_lsm_num)
                    << "----------" << endl
                    << "The default LSM " << score_lsm_array[dis_lsm_num].lsm_name << " does " << endl;
                 if (tf_questions_list[i].ans[dis_lsm_num][0])
-                    of << "support" << tf_questions_list[i].weight << " point";
+                    of << "support and get " << tf_questions_list[i].weight << " point";
                 else
-                    of << "not supports";
+                    of << "not support";
             }
         }
         of << endl;

@@ -25,7 +25,7 @@ I. Introduction of Linux Security Module (LSM)
         TOMOYO Linux allows each process to declare behaviours and resources needed to achieve their purpose. When protection is enabled, 
         TOMOYO Linux acts like an operation watchdog, restricting each process to only the behaviours and resources allowed by the administrator.
     Application field:
-        Router, OS for static behavier 
+        Router, OS with static behavier 
 ************************************************************************************************************************************************************************
 II. Introduction of minor Linux Security Module
 1. Capabilities
@@ -34,7 +34,8 @@ II. Introduction of minor Linux Security Module
     instead using the dummy module for traditional superuser logic or any other module that they desire. 
     This change also allows the developers of the capabilities logic to maintain and enhance their code more freely, without needing to integrate patches back into the base kernel.
 2. Lockdown
-
+    The Kernel Lockdown feature is designed to prevent both direct and indirect access to a running kernel image, attempting to protect against unauthorized modification of 
+    the kernel image and to prevent access to security and cryptographic data located in kernel memory, whilst still permitting driver modules to be loaded.
 3. Yama
     Yama is a Linux Security Module that collects system-wide DAC security protections that are not handled by the core kernel itself. 
     This is selectable at build-time with CONFIG_SECURITY_YAMA, and can be controlled at run-time through sysctls in /proc/sys/kernel/yama
@@ -44,6 +45,7 @@ II. Introduction of minor Linux Security Module
     This allows systems that have a verified and/or unchangeable filesystem to enforce module and firmware loading restrictions without needing to sign the files individually.
 5. SafeSetID
     SafeSetID is an LSM module that gates the setid family of syscalls to restrict UID/GID transitions from a given UID/GID to only those approved by a system-wide allowlist. 
-    These restrictions also prohibit the given UIDs/GIDs from obtaining auxiliary privileges associated with CAP_SET{U/G}ID, such as allowing a user to set up user namespace UID/GID mappings.
+    These restrictions also prohibit the given UIDs/GIDs from obtaining auxiliary privileges associated with CAP_SET{U/G}ID, such as allowing a user to set up user namespace 
+    UID/GID mappings.
 ************************************************************************************************************************************************************************
 III. Checking Distribution Environment

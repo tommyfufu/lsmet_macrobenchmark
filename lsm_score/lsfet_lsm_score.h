@@ -96,7 +96,7 @@ string str_smack = "SMACK";
 string str_tomoyo = "TOMOYO Linux";
 // class 1 -trivial questions string
 string trviial_rule = "Please key in [T/t]ure or [F/f]alse then press enter";
-string str_autopolicy = "Want LSM to support Automatic policy? [T/F]";
+string str_autopolicy = "Want LSM to support Automatically generate policies? [T/F]";
 string caches_req = "Want LSM to support caches? [T/F]";
 string str_log_support_policy = "Want LSM to support fine tuning policy based on log? [T/F]";
 string str_dynamically_load_policy = "Want LSM to be able to support dynamically load policy? [T/F]";
@@ -113,7 +113,7 @@ string str_mem_protect = "Want LSM to support memory protection? [T/F]";
 // class 2 - complex questions string
 string complex_rule = "Please key in your options continually then press Enter (e.g. if you want to select option 1, 3, 4, please key in 134 then press Enter)";
 string str_support_security_models = "Which security models do you want? [0]none [1]DTE [2]FLASK [3]MLS [4]RBAC";
-string str_support_virtualization = "Which virtualization technique do you want to support? [0]none [1]libvirt [2]KVM [3]QEMU [4]Xen [5]sVirt [6]Docker";
+string str_support_virtualization = "Which virtualization technique do you want to support? [0]none [1]Docker [2]KVM [3]libvirt [4]QEMU [5]sVirt [6]Xen";
 // class 3 - environmental questions string
 string does_insert_into_kerenl = "Checking LSMs hasn't been inserted into the kernel";
 string does_distrib_support_lsm = "Checking your distribution Linux whether supports LSMs";
