@@ -207,11 +207,12 @@ elif [ ${mylsm} == 'tomoyo-editpolicy' ]; then
         ;;
     esac
     ovarray[0]=$(cat disable.txt| bc -l)
+    echo 'disable LSM'
     ovarray[1]=$(cat enable.txt| bc -l)
     overhead=$(awk -v x=${ovarray[1]} -v y=${ovarray[0]} 'BEGIN{printf "%.4f\n", (x-y)/y}')
-    echo 'Overhead is :'
+    echo 'Overhead is :' 
     overhead=$(echo ${overhead}*100|bc  )
-    echo "${overhead}%"
+    echo "${overhead}%" 
     echo "====="
 else
     echo "No LSM install"
