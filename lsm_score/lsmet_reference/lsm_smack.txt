@@ -4,7 +4,7 @@ I. Introduction of Smack
     Smack is not the only Mandatory Access Control scheme available for Linux. 
     Those new to Mandatory Access Control are encouraged to compare Smack with the other mechanisms available to determine which is best suited to the problem at hand.
 
-    Official website: git://github.com/smack-team/smack.git
+    Official website: https://github.com/smack-team
     Official Documentation: https://www.kernel.org/doc/html/v4.18/admin-guide/LSM/Smack.html
 
 ************************************************************************************************************************************************************************

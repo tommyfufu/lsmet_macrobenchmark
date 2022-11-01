@@ -5,12 +5,17 @@ I. Introduction of Linux Security Module (LSM)
         capabilities, network access and rlimits, collectively known as the AppArmor policy for the program, or simply as a profile.
     Application field:
         PC, Server
+    Size:
+        13.4 MB
+
 2. SELinux
     Overview:
         Security-Enhanced Linux (SELinux) a label-based MAC framework, that provides a hybrid of concepts and capabilities drawn from mandatory access controls, 
         mandatory integrity controls, role-based access control (RBAC), and type enforcement architecture. 
     Application field:
         Server, PC
+    Size:
+        29 MB
 
 3. Smack
     Overview:
@@ -18,6 +23,8 @@ I. Introduction of Linux Security Module (LSM)
         using a set of custom mandatory access control (MAC) rules, with simplicity as its main design goal. Framework of SMACK is a mix of DTE and Bell-La Padula.
     Application field:
         Embedded Operating System, IoT
+    Size:
+        213 KB
 
 4. TOMOYO Linux:
     Overview:
@@ -25,7 +32,9 @@ I. Introduction of Linux Security Module (LSM)
         TOMOYO Linux allows each process to declare behaviours and resources needed to achieve their purpose. When protection is enabled, 
         TOMOYO Linux acts like an operation watchdog, restricting each process to only the behaviours and resources allowed by the administrator.
     Application field:
-        Router, OS for static behavier 
+        Router, OS with static behavier 
+    Size:
+        1.1 MB
 ************************************************************************************************************************************************************************
 II. Introduction of minor Linux Security Module
 1. Capabilities
@@ -34,7 +43,8 @@ II. Introduction of minor Linux Security Module
     instead using the dummy module for traditional superuser logic or any other module that they desire. 
     This change also allows the developers of the capabilities logic to maintain and enhance their code more freely, without needing to integrate patches back into the base kernel.
 2. Lockdown
-
+    The Kernel Lockdown feature is designed to prevent both direct and indirect access to a running kernel image, attempting to protect against unauthorized modification of 
+    the kernel image and to prevent access to security and cryptographic data located in kernel memory, whilst still permitting driver modules to be loaded.
 3. Yama
     Yama is a Linux Security Module that collects system-wide DAC security protections that are not handled by the core kernel itself. 
     This is selectable at build-time with CONFIG_SECURITY_YAMA, and can be controlled at run-time through sysctls in /proc/sys/kernel/yama
@@ -44,20 +54,29 @@ II. Introduction of minor Linux Security Module
     This allows systems that have a verified and/or unchangeable filesystem to enforce module and firmware loading restrictions without needing to sign the files individually.
 5. SafeSetID
     SafeSetID is an LSM module that gates the setid family of syscalls to restrict UID/GID transitions from a given UID/GID to only those approved by a system-wide allowlist. 
-    These restrictions also prohibit the given UIDs/GIDs from obtaining auxiliary privileges associated with CAP_SET{U/G}ID, such as allowing a user to set up user namespace UID/GID mappings.
+    These restrictions also prohibit the given UIDs/GIDs from obtaining auxiliary privileges associated with CAP_SET{U/G}ID, such as allowing a user to set up user namespace 
+    UID/GID mappings.
 ************************************************************************************************************************************************************************
 III. Checking Distribution Environment
-After lsfet_lsm_score testing, the_most_suitable LSM is SELinux
-It's score is 24
-And your Distribution Ubuntu's  default LSM is AppArmor
-It's score is 10
+V. Performance Evaluation
+Default LSM on this environment: AppArmor
+Time for LSM disabled: 132.084 seconds
+Time for LSM enabled: 174.795 seconds
+Overhead: 32.33%
+備註: 
+Performance Evaluation所測的是指現在運行環境所開啟的LSM，與前面測試中所提到的Default LSM與The most suitable LSM可能不同
+若想測試Default LSM與The most suitable LSM對效能的影響，請參考上面提供的連結，安裝好後再重測一次lsmet_perf_sh.sh
+After lsmet_lsm_score testing, the_most_suitable LSM is SELinux
+It's score is 27
+And your Distribution Ubuntu, the default LSM is AppArmor
+It's score is 6
 Fortunately, your Distribution Ubuntu does insert SELinux into the kernel
 So you don't need to remake a new kenerl
 ************************************************************************************
 ************************************************************************************
 IV. Questionnaire analysis
 Listing each test and your answer, and comparison of the differences between the most appropriate LSM and the default LSM based on your responses to 
-the lsfet_lsm_score test
+the lsmet_lsm_score test
 
 /----------------------------------------/
 Class 1 - Trivial questions 
@@ -71,17 +90,12 @@ the_most_suitable LSM SELinux does
 support and get 1 point
 ----------
 The default LSM AppArmor does 
-not supports
-----------------------------------------
-2. Want LSM to support Automatic policy? [T/F]
-Description: LSM provides the ability to automatically generate policies (i.e. learning mode and enforcing mode)?
-Your answer is: t
-----------
-the_most_suitable LSM SELinux does 
 not support
-----------
-The default LSM AppArmor does 
-support1 point
+----------------------------------------
+2. Want LSM to support Automatically generate policies? [T/F]
+Description: LSM provides the ability to automatically generate policies (i.e. learning mode and enforcing mode)?
+Your answer is: f
+
 ----------------------------------------
 3. Want LSM to support fine tuning policy based on log? [T/F]
 Description: LSM provides features that allow users to fine-tune access permissions (e.g. aa-logprof from AppArmor, audit2allow form selinux)
@@ -91,17 +105,12 @@ the_most_suitable LSM SELinux does
 support and get 1 point
 ----------
 The default LSM AppArmor does 
-support1 point
+support and get 1 point
 ----------------------------------------
 4. Want LSM to be able to support dynamically load policy? [T/F]
 Description: Load or use new policy without reboot
-Your answer is: t
-----------
-the_most_suitable LSM SELinux does 
-support and get 1 point
-----------
-The default LSM AppArmor does 
-support1 point
+Your answer is: f
+
 ----------------------------------------
 5. Want LSM to support caches? [T/F]
 Description: Recording the access behavior through the cache can speed up the confirmation of access rights. In addition, the access behavior of the same object and subject 
@@ -112,77 +121,57 @@ the_most_suitable LSM SELinux does
 support and get 1 point
 ----------
 The default LSM AppArmor does 
-not supports
+not support
 ----------------------------------------
 6. Want LSM to support security auditing? [T/F]
 Description: Provides additional auditing capabilities
-Your answer is: t
-----------
-the_most_suitable LSM SELinux does 
-support and get 2 point
-----------
-The default LSM AppArmor does 
-support2 point
+Your answer is: f
+
 ----------------------------------------
 7. Want LSM to supports configurable audit? [T/F]
 Description: Auditing can be tuned for more fine-grained record access behavior
 Your answer is: t
 ----------
 the_most_suitable LSM SELinux does 
-support and get 2 point
+support and get 4 point
 ----------
 The default LSM AppArmor does 
-not supports
+not support
 ----------------------------------------
 8. Want LSM to support whitelist? [T/F]
 Description: Provides a whitelist function to comply with the principle of least privilege as much as possible
-Your answer is: t
-----------
-the_most_suitable LSM SELinux does 
-support and get 2 point
-----------
-The default LSM AppArmor does 
-support2 point
+Your answer is: f
+
 ----------------------------------------
 9. Want LSM to support trust path execution? [T/F]
 Description: Provides Path Trust Execution (PTE) functionality to revoke a program's permission to use system calls (e.g. exec())
 Your answer is: t
 ----------
 the_most_suitable LSM SELinux does 
-support and get 2 point
+support and get 4 point
 ----------
 The default LSM AppArmor does 
-not supports
+not support
 ----------------------------------------
 10. Want LSM to support sandbox? [T/F]
 Description: LSM can assist in establishing a sandbox environment
-Your answer is: t
-----------
-the_most_suitable LSM SELinux does 
-support and get 2 point
-----------
-The default LSM AppArmor does 
-not supports
+Your answer is: f
+
 ----------------------------------------
 11. Want LSM to have security certifications? [T/F]
 Description: Such as passing CAPP, EAL, LSPP and other security verification
 Your answer is: t
 ----------
 the_most_suitable LSM SELinux does 
-support and get 2 point
+support and get 4 point
 ----------
 The default LSM AppArmor does 
-not supports
+not support
 ----------------------------------------
 12. Want LSM to support memory protection? [T/F]
 Description: LSM can shield important program and/or kernel structures from tampering via memory interfaces such as mmap(2), /dev/kmem, or even via stack overruns
-Your answer is: t
-----------
-the_most_suitable LSM SELinux does 
-support and get 2 point
-----------
-The default LSM AppArmor does 
-not supports
+Your answer is: f
+
 ************************************************
 /----------------------------------------/
 Class 2 - Complex questions 
@@ -201,25 +190,17 @@ AppArmor
 does not support any of your requirements
 ----------
 ----------------------------------------
-2. Which virtualization technique do you want to support? [0]none [1]libvirt [2]KVM [3]QEMU [4]Xen [5]sVirt [6]Docker
+2. Which virtualization technique do you want to support? [0]none [1]Docker [2]KVM [3]libvirt [4]QEMU [5]sVirt [6]Xen
 Description: LSM official website provides security support for specific virtualization technologies
-Your answer is: 34
+Your answer is: 123456
 ----------
 the_most_suitable LSM 
 SELinux
-supports 34
+supports 23456
 ----------
 The default LSM 
 AppArmor
-supports 34
+supports 1234
 ----------
 ************************************************************************************
 ************************************************************************************
-V. Performance Evaluation
-Default LSM on this environment: AppArmor
-Time for LSM disabled: 174.795 seconds
-Time for LSM enabled: 132.084 seconds
-Overhead: 32.33%
-備註: 
-Performance Evaluation所測的是指現在運行環境所開啟的LSM，與前面測試中所提到的Default LSM與The most suitable LSM可能不同
-若想測試Default LSM與The most suitable LSM對效能的影響，請參考上面提供的連結，安裝好後再重測一次lsfet_perf_sh.sh

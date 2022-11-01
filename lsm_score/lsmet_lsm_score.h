@@ -89,7 +89,7 @@ static int muti_ans_array[MUTI_ANS_QUESTIONS_NUM][LSMs_NUM][MAX_OPS] = {
 };
 
 // init and declare
-string beginning = "Hello! Welcome to use LSFET - Linux Security Framework Evaluation Tool\nWe will ask you some questions to help us init criteria, which will help you find the most suitable LSM.\n";
+string beginning = "Hello! Welcome to use LSMET - Linux Security Modules Evaluation Tool\nWe will ask you some questions to help us init criteria, which will help you find the most suitable LSM.\n";
 string str_apparmor = "AppArmor";
 string str_selinux = "SELinux";
 string str_smack = "SMACK";
@@ -142,4 +142,4 @@ bool tq_lsm_request_minus1();
 int complex_q();
 // Generate report
 int find_the_most_suitable_lsm();
-int gen_lsfet_report(string distrb_name, int dis_lsm_num);
+int gen_lsmet_report(string distrb_name, int dis_lsm_num);
