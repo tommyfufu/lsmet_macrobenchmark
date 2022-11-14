@@ -1,4 +1,4 @@
-#include "lsmet_lsm_score.h"
+#include "lsmet_scoring.h"
 int weight_arr[QUES_CLASS];
 vector<dis_struct> os_list;
 scoreboard_col score_lsm_array[4];
@@ -499,7 +499,7 @@ int gen_lsmet_report(string distrb_name, int dis_lsm_num)
     stringstream ofstr;
     int flag_dont_need_to_show_default_lsm = 0;
     int the_most_suitable_lsm_num = find_the_most_suitable_lsm();
-    of << "After lsmet_lsm_score testing, the_most_suitable LSM is "
+    of << "After lsmet_scoring testing, the_most_suitable LSM is "
        << score_lsm_array[the_most_suitable_lsm_num].lsm_name << endl
        << "It's score is "
        << score_lsm_array[the_most_suitable_lsm_num].score << endl;
@@ -530,7 +530,7 @@ int gen_lsmet_report(string distrb_name, int dis_lsm_num)
     of << "************************************************************************************" << endl;
     of << "************************************************************************************" << endl;
     of << "IV. Questionnaire analysis" << endl;
-    of << "Listing each test and your answer, and comparison of the differences between the most appropriate LSM and the default LSM based on your responses to \nthe lsmet_lsm_score test" << endl
+    of << "Listing each test and your answer, and comparison of the differences between the most appropriate LSM and the default LSM based on your responses to \nthe lsmet_scoring test" << endl
        << endl;
     of << "/----------------------------------------/" << endl
        << "Class 1 - Trivial questions " << endl

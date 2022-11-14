@@ -1,4 +1,4 @@
-#include "lsmet_lsm_score.h"
+#include "lsmet_scoring.h""
 #include <filesystem>
 int read_file_to_another_file_without_append_without_append(string inf, string outf)
 {
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
         if (lsm_score_testing == 0)
         {
             stage = 2;
-            execl("lsmet_lsm_score", "lsmet_lsm_score", NULL);
+            execl("lsmet_scoring", "lsmet_scoring", NULL);
         }
         else if (lsm_score_testing > 0)
         {

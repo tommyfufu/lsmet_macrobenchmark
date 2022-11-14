@@ -1,12 +1,12 @@
-ALL : lsmet_lsm_score LSMET clean
+ALL : lsmet_scoring lsmet clean
 CC = g++
 CFLAG = -I.
 
-LSMET: LSMET.o
-	${CC} LSMET.o -o LSMET ${CFLAG}
+lsmet: lsmet.o
+	${CC} lsmet.o -o lsmet ${CFLAG}
 
-lsmet_lsm_score: lsmet_lsm_score.o
-	${CC} lsmet_lsm_score.o -o lsmet_lsm_score ${CFLAG}
+lsmet_scoring: lsmet_scoring.o
+	${CC} lsmet_scoring.o -o lsmet_scoring ${CFLAG}
 
 .PHONY: all clean
 clean:
