@@ -72,7 +72,7 @@ function tomoyo_disable(){
         echo "Start caculating the benchmark"
         apache_bench > disable.txt
         sleep 2
-        echo "The benchmark calculation is complete, please exit lsfet_perf_sh.sh and use tomoyo-editpolicy to set lsfet_perf_sh.sh in permissive mode"
+        echo "The benchmark calculation is complete, please exit lsmet_perf.sh and use tomoyo-editpolicy to set lsmet_perf.sh in permissive mode"
         echo "The method is to find the same line and key in 's' to set 2"
         read -p "press any key to exit" ex
         ;;
@@ -143,13 +143,13 @@ if [ ${mylsm} == 'apparmor_status' ]; then
         systemctl stop apparmor.service
         systemctl disable apparmor.service
         systemctl restart apache2
-        #echo 'Please reboot and rerun lsfet_perf.sh to test the performance of apache without apparmor management'
+        #echo 'Please reboot and rerun lsmet_perf.sh to test the performance of apache without apparmor management'
         #exit 0
         # systemctl is-active apparmor.service
         # apache_bench > disable.txt
         # systemctl start apparmor.service
     #elif [ ${lsmstat} == 'inactive' ]; then
-        #echo "After reboot please run lsfet_perf.sh again"
+        #echo "After reboot please run lsmet_perf.sh again"
         #exit 0
         echo 'Start testing inactive'
         apache_bench > disable.txt
@@ -187,7 +187,7 @@ elif [ ${mylsm} == 'sestatus' ]; then
          exit 0
     elif [ ${lsmstat} == 'Enforcing' ] || [ ${lsmstat} == 'Permissive' ]; then
         #echo "Please manually set SELinux=disable in /etc/selinux/config and then reboot"
-        #echo "After reboot please run lsfet_perf.sh again"
+        #echo "After reboot please run lsmet_perf.sh again"
         #exit 0
         #setenforce 1
         apache_bench > enable.txt
@@ -205,7 +205,7 @@ elif [ ${mylsm} == 'tomoyo-editpolicy' ]; then
     echo "TOMOYO"
     echo "====="
     apache_enable ${mydistrib}
-    echo -e "If you are running lsfet_perf_sh.sh for the first time \nor you have not yet obtained the benchmark (i.e. do not disable tomoyo), please enter Y."
+    echo -e "If you are running lsmet_perf.sh for the first time \nor you have not yet obtained the benchmark (i.e. do not disable tomoyo), please enter Y."
     read -p "Otherwise, if you have obtained the benchmark and want to further calculate the overhead, please enter N.[Y/N]" fisrttime
     case $fisrttime in
     Y | y)
