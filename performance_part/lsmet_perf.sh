@@ -204,36 +204,22 @@ elif [ ${mylsm} == 'sestatus' ]; then
 elif [ ${mylsm} == 'tomoyo-editpolicy' ]; then
     echo "TOMOYO"
     echo "====="
-    #apache_enable ${mydistrib}
-    # echo -e "If you are running lsfet_perf_sh.sh for the first time \nor you have not yet obtained the benchmark (i.e. do not disable tomoyo), please enter Y."
-    # read -p "Otherwise, if you have obtained the benchmark and want to further calculate the overhead, please enter N.[Y/N]" fisrttime
-    # case $fisrttime in
-    # Y | y)
-    #   tomoyo_disable
-    #   exit 0
-    #   ;;
-    # N | n)
-    #   tomoyo_enable
-    #   ;;
-    # *)
-    #     echo "error choice"
-    #     exit 0
-    #     ;;
-    # esac
-    tomoyo-editpolicy
-    @
-    f
-    apache
-    s
-    0
-    apache_bench >> disable.txt
-    tomoyo-editpolicy
-    @
-    f
-    apache
-    s
-    2
-    apache_bench >> enable.txt
+    apache_enable ${mydistrib}
+    echo -e "If you are running lsfet_perf_sh.sh for the first time \nor you have not yet obtained the benchmark (i.e. do not disable tomoyo), please enter Y."
+    read -p "Otherwise, if you have obtained the benchmark and want to further calculate the overhead, please enter N.[Y/N]" fisrttime
+    case $fisrttime in
+    Y | y)
+      tomoyo_disable
+      exit 0
+      ;;
+    N | n)
+      tomoyo_enable
+      ;;
+    *)
+        echo "error choice"
+        exit 0
+        ;;
+    esac
     ovarray[0]=$(cat disable.txt| bc -l)
     echo 'disable LSM'
     ovarray[1]=$(cat enable.txt| bc -l)
