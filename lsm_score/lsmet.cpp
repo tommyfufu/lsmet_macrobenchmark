@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     }
     if (stage == 4)
     {
-        int input_overhead = append_overhead_behind_lsmet_report("../performance_part/overhead", "./lsmet_report_dir/lsmet_report.txt");
+        int input_overhead = append_overhead_behind_lsmet_report("../performance_part/overhead.txt", "./lsmet_report_dir/lsmet_report.txt");
         if (input_overhead == 1)
         {
             cout << "Please run lsmet_perf_sh.sh first, then you can get overhead that casued by the lsm." << endl;

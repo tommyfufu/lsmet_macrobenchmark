@@ -131,7 +131,7 @@ if [ ${mylsm} == 'apparmor_status' ]; then
     systemctl restart apache2
     systemctl is-active apparmor.service > lsmstat.txt
     lsmstat=$(cat lsmstat.txt)
-    echo 'Default LSM on this environment: AppArmor' >> ../lsm_score/lsm_report_dir/lsmet_report.txt
+    echo 'Default LSM on this environment: AppArmor' > overhead.txt
     echo ${lsmstat}
     if [ ${lsmstat} == 'active' ]; then
         echo 'Fisrt, start testing active'
@@ -157,8 +157,7 @@ if [ ${mylsm} == 'apparmor_status' ]; then
         apache_bench > disable.txt
         echo 'Time for LSM disabled: ' >> overhead.txt
         cat disable.txt >> overhead.txt
-        cat overhead.txt >> ../lsm_score/lsm_report_dir/lsmet_report.txt
-        systemctl start apparmor.service
+       	systemctl start apparmor.service
         systemctl enable apparmor.service
         rm /etc/apparmor.d/disable/usr.sbin.apache2
         aa-complain /etc/apparmor.d/usr.sbin.apache2
@@ -171,8 +170,10 @@ if [ ${mylsm} == 'apparmor_status' ]; then
     ovarray[1]=$(cat enable.txt| bc -l)
     overhead=$(awk -v x=${ovarray[1]} -v y=${ovarray[0]} 'BEGIN{printf "%.2f\n", (x-y)/y}')
     echo 'Overhead is :'
+    echo 'Overhead is :' >> overhead.txt
     overhead=$(echo ${overhead}*100 |bc -l )
     echo "${overhead}%"
+    echo "${overhead}%" >> overhead.txt
     echo "====="
 elif [ ${mylsm} == 'sestatus' ]; then
     echo "SELinux"
@@ -233,4 +234,5 @@ else
     echo "No LSM install"
     echo "====="
 fi
+cat overhead.txt >> ../lsm_score/lsmet_report_dir/lsmet_report.txt
 exit 0;
