@@ -60,7 +60,7 @@ function tomoyo_disable(){
     echo "lsmet_perf.sh can't auto enable/disable TOMOYO, need Root manually configure"
     echo "==="
     echo "Please follow the steps below "
-    echo "1. Run tomoyo-editpolicy (# tomoyo-editpolicy)"
+    echo "1. Run tomoyo-editpolicy ( $ sudo tomoyo-editpolicy)"
     echo "2. Press key '@' to transfer to Process State Viewer, and Press key 'f' to find the absolute path of apache2"
     echo "3. Then the number in front of this path, 0 means disabled, 1 means learning, 2 means permissive, 3 means enforcing"
     echo -e "   apache2 will select the running time in disabled mode as the benchmark,"
@@ -72,7 +72,11 @@ function tomoyo_disable(){
         echo "Start caculating the benchmark"
         apache_bench > disable.txt
         sleep 2
-        echo "The benchmark calculation is complete, please exit lsmet_perf.sh and use tomoyo-editpolicy to set lsmet_perf.sh in permissive mode"
+        echo "The benchmark calculation is complete, please exit lsmet_perf.sh and use tomoyo-editpolicy to set apache2 in permissive mode"
+        echo "Please follow the steps below "
+        echo "1. Run tomoyo-editpolicy ( $ sudo tomoyo-editpolicy)"
+        echo "2. Press key '@' to transfer to Process State Viewer, and Press key 'f' and key in "apache2" to find the execute path apache2"
+        echo "3. Then the number in front of this path, 0 means disabled, 1 means learning, 2 means permissive, 3 means enforcing"
         echo "The method is to find the same line and key in 's' to set 2"
         read -p "press any key to exit" ex
         ;;
@@ -204,16 +208,21 @@ elif [ ${mylsm} == 'sestatus' ]; then
 elif [ ${mylsm} == 'tomoyo-editpolicy' ]; then
     echo "TOMOYO"
     echo "====="
+    echo 'Default LSM on this environment: TOMOYO' > overhead.txt
     apache_enable ${mydistrib}
     echo -e "If you are running lsmet_perf.sh for the first time \nor you have not yet obtained the benchmark (i.e. do not disable tomoyo), please enter Y."
     read -p "Otherwise, if you have obtained the benchmark and want to further calculate the overhead, please enter N.[Y/N]" fisrttime
     case $fisrttime in
     Y | y)
       tomoyo_disable
+      echo 'Time for LSM disabled: ' >> overhead.txt
+      cat disable.txt >> overhead.txt
       exit 0
       ;;
     N | n)
       tomoyo_enable
+      echo 'Time for LSM enabled: ' >> overhead.txt
+      cat enable.txt >> overhead.txt
       ;;
     *)
         echo "error choice"
@@ -224,9 +233,11 @@ elif [ ${mylsm} == 'tomoyo-editpolicy' ]; then
     echo 'disable LSM'
     ovarray[1]=$(cat enable.txt| bc -l)
     overhead=$(awk -v x=${ovarray[1]} -v y=${ovarray[0]} 'BEGIN{printf "%.4f\n", (x-y)/y}')
-    echo 'Overhead is :' 
-    overhead=$(echo ${overhead}*100|bc  )
-    echo "${overhead}%" 
+    echo 'Overhead is :'
+    echo 'Overhead is :' >> overhead.txt
+    overhead=$(echo ${overhead}*100 |bc -l )
+    echo "${overhead}%"
+    echo "${overhead}%" >> overhead.txt
     echo "====="
 else
     echo "No LSM install"
