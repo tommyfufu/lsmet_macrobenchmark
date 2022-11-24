@@ -60,12 +60,10 @@ function tomoyo_disable(){
     echo "lsfet_perf.sh can't auto enable/disable TOMOYO, need Root manually configure"
     echo "==="
     echo "Please follow the steps below "
-    echo "1. Run tomoyo-editpolicy (#tomoyo-editpolicy)"
-    echo "2. Press key 'f' to find the absolute path of this program (aka lsfet_perf_sh.sh)"
-    echo "   for example, key in /home/lsfet/lsfet_perf_sh.sh"
-    echo "3. Then you will find this path under /bin/bash (or your shell name)"
-    echo "   The number in front of this path, 0 means disabled, 1 means learning, 2 means permissive, 3 means enforcing"
-    echo -e "   lsfet_perf_sh.sh will select the running time in disabled mode as the benchmark,"
+    echo "1. Run tomoyo-editpolicy (# tomoyo-editpolicy)"
+    echo "2. Press key '@' to transfer to Process State Viewer, and Press key 'f' to find the absolute path of apache2"
+    echo "3. Then the number in front of this path, 0 means disabled, 1 means learning, 2 means permissive, 3 means enforcing"
+    echo -e "   apache2 will select the running time in disabled mode as the benchmark,"
     echo -e "   and then select the running time in permissive mode to caculate the overhead"
     echo "4. Please input 's' to set 0 first, and then input 'q' to quit tomoyo-edpolicy"
     read -p "If you have already understood and set tomoyo to disabled, please input [Y/N], Y to continue, N to exit" answer
@@ -207,21 +205,35 @@ elif [ ${mylsm} == 'tomoyo-editpolicy' ]; then
     echo "TOMOYO"
     echo "====="
     #apache_enable ${mydistrib}
-    echo -e "If you are running lsfet_perf_sh.sh for the first time \nor you have not yet obtained the benchmark (i.e. do not disable tomoyo), please enter Y."
-    read -p "Otherwise, if you have obtained the benchmark and want to further calculate the overhead, please enter N.[Y/N]" fisrttime
-    case $fisrttime in
-    Y | y)
-      tomoyo_disable
-      exit 0
-      ;;
-    N | n)
-      tomoyo_enable
-      ;;
-    *)
-        echo "error choice"
-        exit 0
-        ;;
-    esac
+    # echo -e "If you are running lsfet_perf_sh.sh for the first time \nor you have not yet obtained the benchmark (i.e. do not disable tomoyo), please enter Y."
+    # read -p "Otherwise, if you have obtained the benchmark and want to further calculate the overhead, please enter N.[Y/N]" fisrttime
+    # case $fisrttime in
+    # Y | y)
+    #   tomoyo_disable
+    #   exit 0
+    #   ;;
+    # N | n)
+    #   tomoyo_enable
+    #   ;;
+    # *)
+    #     echo "error choice"
+    #     exit 0
+    #     ;;
+    # esac
+    tomoyo-editpolicy
+    @
+    f
+    apache
+    s
+    0
+    apache_bench >> disable.txt
+    tomoyo-editpolicy
+    @
+    f
+    apache
+    s
+    2
+    apache_bench >> enable.txt
     ovarray[0]=$(cat disable.txt| bc -l)
     echo 'disable LSM'
     ovarray[1]=$(cat enable.txt| bc -l)
