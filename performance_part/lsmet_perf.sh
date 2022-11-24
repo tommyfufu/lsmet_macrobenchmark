@@ -129,6 +129,9 @@ if [ ${mylsm} == 'apparmor_status' ]; then
     echo "====="
     apt install apache2-utils libapache2-mod-apparmor -y
     a2enmod apparmor
+    sleep 3
+    # usr.sbin.apache2 has capability dac_override, need to comment out, so we change file
+    cp ./reference/apparmor/usr.sbin.apache2 /etc/apparmor.d/usr.sbin.apache2
     systemctl restart apparmor
     systemctl restart apache2
     systemctl is-active apparmor.service > lsmstat.txt
@@ -179,22 +182,32 @@ if [ ${mylsm} == 'apparmor_status' ]; then
     echo "====="
 elif [ ${mylsm} == 'sestatus' ]; then
     echo "SELinux"
+    echo 'Default LSM on this environment: SELinux' > overhead.txt
     #apache_enable ${mydistrib}
     getenforce > lsmstat.txt
     lsmstat=$(cat lsmstat.txt)
     echo ${lsmstat}
     if [ ${lsmstat} == 'Disabled' ]; then
-         apache_bench > disable.txt
-         cp ./selinux_config/enable_config/config /etc/selinux/config
-         sleep 3
-         reboot
-         exit 0
+        apache_bench > disable.txt
+        cp ./reference/selinux/enable_config/config /etc/selinux/config
+        apache_bench > disable.txt
+        echo 'Time for LSM disabled: ' >> overhead.txt
+        echo "Caculating overhead..."
+        
+        sleep 3
     elif [ ${lsmstat} == 'Enforcing' ] || [ ${lsmstat} == 'Permissive' ]; then
         #echo "Please manually set SELinux=disable in /etc/selinux/config and then reboot"
-        #echo "After reboot please run lsmet_perf.sh again"
+        #
         #exit 0
         #setenforce 1
         apache_bench > enable.txt
+        cp ./reference/selinux/disable_config/config /etc/selinux/config
+        echo "10 sec wiil reboot automatically. After reboot please rerun lsmet_perf.sh again"
+        echo 'Time for LSM enabled: ' >> overhead.txt
+        cat enable.txt >> overhead.txt
+        sleep 10
+        reboot
+        exit 0
     else
         echo "SELinux error"
     fi
@@ -202,8 +215,10 @@ elif [ ${mylsm} == 'sestatus' ]; then
     ovarray[1]=$(cat enable.txt| bc -l)
     overhead=$(awk -v x=${ovarray[1]} -v y=${ovarray[0]} 'BEGIN{printf "%.2f\n", (x-y)/y}')
     echo 'Overhead is :'
+    echo 'Overhead is :' >> overhead.txt
     overhead=$(echo ${overhead}*100 |bc -l )
     echo "${overhead}%"
+    echo "${overhead}%" >> overhead.txt
     echo "====="
 elif [ ${mylsm} == 'tomoyo-editpolicy' ]; then
     echo "TOMOYO"
