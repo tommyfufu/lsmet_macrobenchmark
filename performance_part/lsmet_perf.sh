@@ -48,7 +48,7 @@ function apache_bench(){
     local testtime
     totaltime=0
     for ((i=1; i<=2; i=i+1)); do
-        ab -n 1000000 -c 20 http://127.0.0.1/ | grep "Time taken for tests:" | cut -d" " -f 7 > result.txt
+        ab -n 100000 -c 20 http://127.0.0.1/ | grep "Time taken for tests:" | cut -d" " -f 7 > result.txt
         testtime=$(cat result.txt)
         totaltime=$(echo "${totaltime}+${testtime}" | bc -l)
     done
@@ -57,7 +57,7 @@ function apache_bench(){
 }
 
 function tomoyo_disable(){
-    echo "lsfet_perf.sh can't auto enable/disable TOMOYO, need Root manually configure"
+    echo "lsmet_perf.sh can't auto enable/disable TOMOYO, need Root manually configure"
     echo "==="
     echo "Please follow the steps below "
     echo "1. Run tomoyo-editpolicy (# tomoyo-editpolicy)"
@@ -66,7 +66,7 @@ function tomoyo_disable(){
     echo -e "   apache2 will select the running time in disabled mode as the benchmark,"
     echo -e "   and then select the running time in permissive mode to caculate the overhead"
     echo "4. Please input 's' to set 0 first, and then input 'q' to quit tomoyo-edpolicy"
-    read -p "If you have already understood and set tomoyo to disabled, please input [Y/N], Y to continue, N to exit" answer
+    read -p "If you have already understood and set tomoyo to disabled (btw. tomoyo default is disabled), please input [Y/N], Y to continue, N to exit" answer
     case $answer in
     Y | y)
         echo "Start caculating the benchmark"
