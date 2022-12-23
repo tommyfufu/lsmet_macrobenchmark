@@ -1,4 +1,5 @@
 # LSMET working directory
+```bash
 lsmet
 lsm_score
     lsmet_reference
@@ -17,6 +18,7 @@ performance_part
             enable_config
             disable_config
     lsmet_perf.sh
+```
 # Get program
 ```bash=
 $ git clone https://github.com/tommyfufu/lsmet.git
