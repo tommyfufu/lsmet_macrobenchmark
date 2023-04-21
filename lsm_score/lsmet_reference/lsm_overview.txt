@@ -1,8 +1,13 @@
 I. Introduction of Linux Security Module (LSM)
 1. AppArmor
     Overview:
-        AppArmor, Application Armor, is an application-centric MAC framework built using LSM. Apparmor confines individual programs to a set of files, 
-        capabilities, network access and rlimits, collectively known as the AppArmor policy for the program, or simply as a profile.
+        AppArmor is a default LSM in various Linux distributions, including Ubuntu, Debian, and SUSE, launched in 2005. 
+        It enhances access control with security policies that restrict individual applications' actions and access to sensitive system resources.
+        Its profile-based approach makes it flexible and allows customization. 
+        Its key feature is the ability to confine an application to a specific domain of operation, aka "profile", accomplished through access control rules, 
+        file system restrictions, and network restrictions. 
+        AppArmor provides two modes: complain mode and enforce mode, allowing for smooth security policy transition. 
+        It is widely used and ideal for small to mid-sized organizations due to its simple configuration and management.
     Application field:
         PC, Server
     Size:
@@ -10,8 +15,14 @@ I. Introduction of Linux Security Module (LSM)
 
 2. SELinux
     Overview:
-        Security-Enhanced Linux (SELinux) a label-based MAC framework, that provides a hybrid of concepts and capabilities drawn from mandatory access controls, 
-        mandatory integrity controls, role-based access control (RBAC), and type enforcement architecture. 
+        SELinux (Security-Enhanced Linux) was launched in 2000 to provide fine-grained access control for Linux systems. 
+        It is a powerful and complex LSM adopted as the default LSM by major Linux distributions, including Red Hat Enterprise Linux (RHEL) and CentOS, 
+        for enterprise-level deployments that require robust access control. 
+        SELinux implements access control by specifying access control rules based on security contexts, a label-based MAC framework. 
+        It is based on the FLASK security model and offers type enforcement, role-based access control, multi-level security, and Multi-Category Security (MCS). 
+        SELinux provides two modes of operation: permissive mode and enforcing mode. 
+        While highly configurable, SELinux requires more configuration and maintenance than other LSMs and may best suit organizations 
+        with advanced security knowledge and large or highly confidential environments.
     Application field:
         Server, PC
     Size:
@@ -20,7 +31,13 @@ I. Introduction of Linux Security Module (LSM)
 3. Smack
     Overview:
         Simplified Mandatory Access Control Kernel (Smack) is a Linux kernel security module that protects data and process interaction from malicious manipulation 
-        using a set of custom mandatory access control (MAC) rules, with simplicity as its main design goal. Framework of SMACK is a mix of DTE and Bell-La Padula.
+        using a set of custom mandatory access control (MAC) rules, with simplicity as its main design goal. 
+        Framework of SMACK is a mix of DTE and Bell-La Padula.
+        SMACK is a Linux Security Module that provides an easy-to-use MAC (Mandatory Access Control) mechanism. 
+        It assigns a security label to each object to define relationships between objects and the processes that access them. 
+        SMACK integrates Type Enforcement and MLS, automatically applies predefined rules, and supports user-defined rules and symbols. 
+        It also supports Inter-Process Communication (IPC) security for fine-grained control over the flow of information. 
+        SMACK is lightweight and efficient, making it ideal for IoT devices with limited resources.
     Application field:
         Embedded Operating System, IoT
     Size:
@@ -28,6 +45,14 @@ I. Introduction of Linux Security Module (LSM)
 
 4. TOMOYO Linux:
     Overview:
+        TOMOYO Linux is a Linux kernel security module that provides fine-grained access control based on domain transitions. 
+        Its core framework is based on the concept of domain transitions and supports general access control of file resources, 
+        inter-process communication (IPC), and network functions. 
+        TOMOYO Linux has four modes of operation, including a learning mode that appends access requests that violate policy, 
+        a permissive mode that may or may not 
+        append policy violations, and an enforcing mode that rejects policy violations. 
+        Its design allows for detailed tracking of the system's operation and ensures stable and reliable system operation. 
+        TOMOYO Linux is a powerful and flexible LSM suitable for environments requiring fine-grained access control.
         TOMOYO Linux focuses on the behaviour of a system. Every process is created to achieve a purpose, and like an immigration officer, 
         TOMOYO Linux allows each process to declare behaviours and resources needed to achieve their purpose. When protection is enabled, 
         TOMOYO Linux acts like an operation watchdog, restricting each process to only the behaviours and resources allowed by the administrator.
@@ -38,24 +63,28 @@ I. Introduction of Linux Security Module (LSM)
 ************************************************************************************************************************************************************************
 II. Introduction of minor Linux Security Module
 1. Capabilities
-    The LSM kernel patch moves most of the existing POSIX.1e capabilities logic into an optional security module stored in the file security/capability.c. 
-    This change allows users who do not want to use capabilities to omit this code entirely from their kernel, 
-    instead using the dummy module for traditional superuser logic or any other module that they desire. 
-    This change also allows the developers of the capabilities logic to maintain and enhance their code more freely, without needing to integrate patches back into the base kernel.
-2. Lockdown
-    The Kernel Lockdown feature is designed to prevent both direct and indirect access to a running kernel image, attempting to protect against unauthorized modification of 
-    the kernel image and to prevent access to security and cryptographic data located in kernel memory, whilst still permitting driver modules to be loaded.
-3. Yama
-    Yama is a Linux Security Module that collects system-wide DAC security protections that are not handled by the core kernel itself. 
-    This is selectable at build-time with CONFIG_SECURITY_YAMA, and can be controlled at run-time through sysctls in /proc/sys/kernel/yama
-4. LoadPin
-    LoadPin is a Linux Security Module that ensures all kernel-loaded files (modules, firmware, etc) all originate from the same filesystem, 
-    with the expectation that such a filesystem is backed by a read-only device such as dm-verity or CDROM. 
-    This allows systems that have a verified and/or unchangeable filesystem to enforce module and firmware loading restrictions without needing to sign the files individually.
+    Capabilities LSM is used to manage the capabilities of processes in Linux. Capabilities are a finer-grained privilege system that allows a process to have only specific privileges instead of all root privileges. 
+    The capabilities are a subset of the all-powerful root permissions that are required for the process to perform specific privileged operations. 
+    Capabilities can be used to reduce the risks associated with running privileged processes.
+2. LoadPin
+    LoadPin LSM is used to restrict the loading of kernel modules to only trusted directories. 
+    This design is beneficial in environments where attackers can exploit the kernel module loading process to gain root-level access to the system. 
+    LoadPin ensures that only kernel modules from trusted sources are loaded into the system, thereby reducing the risks associated with kernel module loading.
+3. Lockdown
+    Lockdown LSM prevents modifications to the running Linux kernel, providing an additional layer of security to the system. 
+    Lockdown can prevent any modifications to the kernel image, prevent the loading of new kernel modules, and prevent access to kernel memory. 
+    This LSM is particularly useful in high-security environments where any modification to the kernel could lead to a security breach.
+4. Yama
+    Yama LSM is used to manage the behavior of the ptrace() system call and process tracing in the Linux kernel. It mitigates potential security risks associated 
+    with ptrace() by introducing several restrictions. 
+    There are four modes: the first is unlimited, the second allows only parent processes to trace their child processes, 
+    the third restricts ptrace() usage to privileged processes with CAP\_SYS_PTRACE capabilities, and the fourth disallows ptrace() usage entirely. 
+    Overall, the Yama LSM provides a layer of security by controlling and limiting the use of the ptrace() system call.
 5. SafeSetID
-    SafeSetID is an LSM module that gates the setid family of syscalls to restrict UID/GID transitions from a given UID/GID to only those approved by a system-wide allowlist. 
-    These restrictions also prohibit the given UIDs/GIDs from obtaining auxiliary privileges associated with CAP_SET{U/G}ID, such as allowing a user to set up user namespace 
-    UID/GID mappings.
+    LSM can prevent the setuid and setgid bits from being set on files located in certain directories. 
+    These bits can be used to grant elevated privileges to non-privileged users, which can be a security risk if not properly managed. 
+    SafeSetID can prevent the setuid and setgid bits from being set on files in directories that are not essential to the system, 
+    thereby reducing the risks associated with privilege escalation attacks.
 ************************************************************************************************************************************************************************
 III. Checking Distribution Environment
 V. Performance Evaluation
