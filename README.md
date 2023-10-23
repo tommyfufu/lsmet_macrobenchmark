@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # LSMET working directory
 ```bash
 lsmet
