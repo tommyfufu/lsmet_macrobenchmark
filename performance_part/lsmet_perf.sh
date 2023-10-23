@@ -47,8 +47,13 @@ function apache_enable(){
 function apache_bench(){
     local testtime
     totaltime=0
+<<<<<<< HEAD:performance_part/lsmet_perf.sh
     for ((i=1; i<=2; i=i+1)); do
         ab -n 100000 -c 20 http://127.0.0.1/ | grep "Time taken for tests:" | cut -d" " -f 7 > result.txt
+=======
+    for ((i=1; i<=5; i=i+1)); do
+        ab -n 1000000 -c 50 http://127.0.0.1/ | grep "Time taken for tests:" | cut -d" " -f 7 > result.txt
+>>>>>>> main:performance_part/lsfet_perf_sh.sh
         testtime=$(cat result.txt)
         totaltime=$(echo "${totaltime}+${testtime}" | bc -l)
     done
@@ -140,6 +145,7 @@ if [ ${mylsm} == 'apparmor_status' ]; then
     echo ${lsmstat}
     if [ ${lsmstat} == 'active' ]; then
         echo 'Fisrt, start testing active'
+<<<<<<< HEAD:performance_part/lsmet_perf.sh
         aa-complain /etc/apparmor.d/usr.sbin.apache2
         apparmor_parser -r /etc/apparmor.d/usr.sbin.apache2
         apache_bench > enable.txt
@@ -152,6 +158,18 @@ if [ ${mylsm} == 'apparmor_status' ]; then
         systemctl restart apache2
         #echo 'Please reboot and rerun lsmet_perf.sh to test the performance of apache without apparmor management'
         #exit 0
+=======
+	cp ./reference/usr.sbin.apache2 /etc/apparmor.d/
+        aa-complain apache2
+        apparmor_parser -r /etc/apparmor.d/usr.sbin.apache2
+        apache_bench > enable.txt
+        apparmor_parser -R /etc/apparmor.d/usr.sbin.apache2
+	aa-disable /etc/apparmor.d/usr.sbin.apache2       
+	systemctl stop apparmor.service
+        systemctl disable apparmor.service
+	echo 'In order to measure the disable time, please reboot'
+        # reboot
+>>>>>>> main:performance_part/lsfet_perf_sh.sh
         # systemctl is-active apparmor.service
         # apache_bench > disable.txt
         # systemctl start apparmor.service
@@ -166,8 +184,12 @@ if [ ${mylsm} == 'apparmor_status' ]; then
         systemctl enable apparmor.service
         rm /etc/apparmor.d/disable/usr.sbin.apache2
         aa-complain /etc/apparmor.d/usr.sbin.apache2
+<<<<<<< HEAD:performance_part/lsmet_perf.sh
         systemctl restart apache2
         #apparmor_parser -r /etc/apparmor.d/usr.sbin.apache2
+=======
+        apparmor_parser -r /etc/apparmor.d/usr.sbin.apache2
+>>>>>>> main:performance_part/lsfet_perf_sh.sh
     else
         echo "AppArmor error"
     fi
@@ -258,5 +280,8 @@ else
     echo "No LSM install"
     echo "====="
 fi
+<<<<<<< HEAD:performance_part/lsmet_perf.sh
 cat overhead.txt >> ../lsm_score/lsmet_report_dir/lsmet_report.txt
+=======
+>>>>>>> main:performance_part/lsfet_perf_sh.sh
 exit 0;
