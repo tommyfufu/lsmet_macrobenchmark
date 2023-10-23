@@ -19,13 +19,6 @@ performance_part
             disable_config
     lsmet_perf.sh
 ```
-# Get program
-```bash=
-$ git clone https://github.com/tommyfufu/lsmet.git
-# username: tommyfufuu
-# password: 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
-$ git checkout OOP
-```
 # LSMET Usage
 ## Step 1. Run lsmet evaluation criteria program
 ```bash=
