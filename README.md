@@ -1,4 +1,4 @@
-# LSMET working directory
+# lsmet_macrobenchmark working directory
 ```bash
 lsmet
 lsm_score
@@ -19,7 +19,7 @@ performance_part
             disable_config
     lsmet_perf.sh
 ```
-# LSMET Usage
+# lsmet_macrobenchmark Usage
 ## Step 1. Run lsmet evaluation criteria program
 ```bash=
 $ cd lsmet/lsm_score/
