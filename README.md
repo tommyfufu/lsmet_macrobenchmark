@@ -31,7 +31,7 @@ the lsmet_report.txt doesn't have performance testing result yet, so next step, 
 ## Step 2. Run lsmet performance testing
 ```bash=
 $ cd ../prformance
-$ sudo ./lsmet_perf.sh #password rtesrtes
+$ sudo ./lsmet_perf.sh
 ```
 then result - overhead is caused by LSM of this environment, and it will be created as overhead.txt
 ## Step 3. Check the lsmet_report full version
@@ -43,8 +43,14 @@ III. Developer system environment
 IV. Objective Criteria Evaluation
 V. Performance impact
 
-## Generate lsmet_report of specific LSM (Optional)
-```bash=
-$ cd lsmet/lsm_score/
-$ ./lsmet lsm_name #lsm_name means AppArmor, SELinux, Smack, TOMOYO
-```
+### Demo
+#### AppArmor Performance Testing Result
+![LSMET perf demojpg](https://github.com/tommyfufu/lsmet_macrobenchmark/assets/101622170/acdd581e-e141-4f3a-98f8-12a330317a76)
+
+## Framework
+![LSMET framework](https://github.com/tommyfufu/lsmet_macrobenchmark/assets/101622170/ac667225-c47b-432b-8468-5e174054db0e)
+
+## Flowchart
+![LSMET Flowchart](https://github.com/tommyfufu/lsmet_macrobenchmark/assets/101622170/48e9e2af-3717-4abb-b9d8-d1f2d9605405)
+
+
