@@ -1,7 +1,6 @@
-#include "lsfet_lsm_score.h"
+#include "lsmet_scoring.h"
 int weight_arr[QUES_CLASS];
 vector<dis_struct> os_list;
-// vector<ques_struct> tf_questions_list;
 scoreboard_col score_lsm_array[4];
 dis_struct *ur_os, alpine, centos, ubuntu, opensuse, any_os;
 string distrib = "", lsm = "";
@@ -14,7 +13,7 @@ public:
     int ans_input_count = num_apparmor;
     questions(string str_qu, string str_qu_de, int sequence, int app, int se, int sm, int tomo, int ad_weigh);
     questions(string str_qu, string str_qu_de, int ops_num, int sequence, int ad_weigh);
-    void muti_user_input_then_adjust_scoreboard();
+    int muti_user_input_then_adjust_scoreboard();
     int tf_user_input_then_adjust_scoreboard(int seq);
     int options_num, weight;
 };
@@ -76,7 +75,7 @@ int questions::tf_user_input_then_adjust_scoreboard(int seq)
     }
     return 0;
 }
-void questions::muti_user_input_then_adjust_scoreboard()
+int questions::muti_user_input_then_adjust_scoreboard()
 {
     user_input = "0";
     int a;
@@ -98,6 +97,7 @@ void questions::muti_user_input_then_adjust_scoreboard()
         {
             cout << "Wrong input! : " << a << endl
                  << "Scoreboard not adjusted" << endl;
+            return 1;
         }
         else
         {
@@ -109,6 +109,7 @@ void questions::muti_user_input_then_adjust_scoreboard()
         }
     }
     print_lsm_scoreboard();
+    return 0;
 }
 vector<questions> muti_questions_list, tf_questions_list;
 
@@ -128,10 +129,10 @@ int main(int argc, char *argv[])
     cout << "-----------------------------------" << endl;
     printf("Start case 3 - Developer Request\n************************\n");
     int dis_lsm_num = envir_req();
-    cout << "end of case 3 questions\n************************\n";
     cout << "-----------------------------------" << endl;
-    cout << "Start generating LSFET report" << endl;
-    gen_lsfet_report(ur_os->distribution, dis_lsm_num);
+    cout << "Input questionnaire analysis to lsmet_report" << endl;
+    gen_lsmet_report(ur_os->distribution, dis_lsm_num);
+
     return 0;
 }
 void os_init()
@@ -199,19 +200,19 @@ void ques_init()
     weight_init();
     /***************Trivial Questions*******************/
     // management q, weight is tr_management
-    questions default_policy(str_default_policy, "Description: testing", 1, 0, 1, 1, 0, weight_arr[tr_management]);
-    questions auto_policy(str_autopolicy, "Description: testing", 2, 1, 0, 0, 1, weight_arr[tr_management]);
-    questions fine_tuning_policy(str_log_support_policy, "Description: testing", 3, 1, 1, 0, 0, weight_arr[tr_management]);
-    questions dynmaic_load_policy(str_dynamically_load_policy, "Description: testing", 4, 1, 1, 1, 1, weight_arr[tr_management]);
-    questions cach_req(caches_req, "Description: testing", 5, 0, 1, 0, 0, weight_arr[tr_management]);
+    questions default_policy(str_default_policy, "Description: LSM provides default policy", 1, 0, 1, 1, 0, weight_arr[tr_management]);
+    questions auto_policy(str_autopolicy, "Description: LSM provides the ability to automatically generate policies (i.e. learning mode and enforcing mode)?", 2, 1, 0, 0, 1, weight_arr[tr_management]);
+    questions fine_tuning_policy(str_log_support_policy, "Description: LSM provides features that allow users to fine-tune access permissions (e.g. aa-logprof from AppArmor, audit2allow form selinux)", 3, 1, 1, 0, 0, weight_arr[tr_management]);
+    questions dynmaic_load_policy(str_dynamically_load_policy, "Description: Load or use new policy without reboot", 4, 1, 1, 1, 1, weight_arr[tr_management]);
+    questions cach_req(caches_req, "Description: Recording the access behavior through the cache can speed up the confirmation of access rights. In addition, the access behavior of the same object and subject \nusually occurs multiple times in a short period of time, so the caching mechanism can greatly speed up the confirmation speed of access rights.", 5, 0, 1, 0, 0, weight_arr[tr_management]);
     // security q, weight is tr_security
-    questions secur_auditing(str_security_auditing, "Description: testing", 6, 1, 1, 1, 1, weight_arr[tr_security]);
-    questions config_audit(str_configurable_aduit, "Description: testing", 7, 0, 1, 1, 0, weight_arr[tr_security]);
-    questions str_whitlist(str_whitelist, "Description: testing", 8, 1, 1, 0, 1, weight_arr[tr_security]);
-    questions sup_tpe(str_support_tpe, "Description: testing", 9, 0, 1, 0, 1, weight_arr[tr_security]);
-    questions sand_box(str_sandbox, "", 10, 0, 1, 0, 0, weight_arr[tr_security]);
-    questions secur_cert(str_fit_security_certifications, "", 11, 0, 1, 0, 0, weight_arr[tr_security]);
-    questions memory_protect(str_mem_protect, "", 12, 0, 1, 1, 0, weight_arr[tr_security]);
+    questions secur_auditing(str_security_auditing, "Description: Provides additional auditing capabilities", 6, 1, 1, 1, 1, weight_arr[tr_security]);
+    questions config_audit(str_configurable_aduit, "Description: Auditing can be tuned for more fine-grained record access behavior", 7, 0, 1, 1, 0, weight_arr[tr_security]);
+    questions str_whitlist(str_whitelist, "Description: Provides a whitelist function to comply with the principle of least privilege as much as possible", 8, 1, 1, 0, 1, weight_arr[tr_security]);
+    questions sup_tpe(str_support_tpe, "Description: Provides Path Trust Execution (PTE) functionality to revoke a program's permission to use system calls (e.g. exec())", 9, 0, 1, 0, 1, weight_arr[tr_security]);
+    questions sand_box(str_sandbox, "Description: LSM can assist in establishing a sandbox environment", 10, 0, 1, 0, 0, weight_arr[tr_security]);
+    questions secur_cert(str_fit_security_certifications, "Description: Such as passing CAPP, EAL, LSPP and other security verification", 11, 0, 1, 0, 0, weight_arr[tr_security]);
+    questions memory_protect(str_mem_protect, "Description: LSM can shield important program and/or kernel structures from tampering via memory interfaces such as mmap(2), /dev/kmem, or even via stack overruns", 12, 0, 1, 1, 0, weight_arr[tr_security]);
     // tf means true/fasle, trivial questions will insert in tf_questions_list
     tf_questions_list.push_back(default_policy);
     tf_questions_list.push_back(auto_policy);
@@ -227,8 +228,8 @@ void ques_init()
     tf_questions_list.push_back(memory_protect);
 
     /***************Complex Questions*******************/
-    questions secu_models(str_support_security_models, "Description: testing", 4, 1, weight_arr[co_management]);
-    questions sup_virtual(str_support_virtualization, "Description: testing", 6, 2, weight_arr[co_management]);
+    questions secu_models(str_support_security_models, "Description: Domain Type Enforcement (DTE), The Flux Advanced Security Kernel (FLASK), Multi-level Security (MLS), Role-based access control (RBAC)", 4, 1, weight_arr[co_management]);
+    questions sup_virtual(str_support_virtualization, "Description: LSM official website provides security support for specific virtualization technologies", 6, 2, weight_arr[co_management]);
 
     // muti means multiple choices, complex questions will insert in muti_questions_list
     muti_questions_list.push_back(secu_models);
@@ -254,7 +255,7 @@ void weight_init()
                 continue;
             else
             {
-                cout << config_line;
+                // cout << config_line;
 
                 if (config_line.find("tr_management") != std::string::npos)
                 {
@@ -287,9 +288,9 @@ void weight_init()
             }
         }
 
-        cout << "weight_arr = ";
-        for (int a = 0; a < 4; a++)
-            cout << weight_arr[a] << endl;
+        // cout << "weight_arr = ";
+        // for (int a = 0; a < 4; a++)
+        //     cout << weight_arr[a] << endl;
     }
     else
     {
@@ -306,7 +307,9 @@ int complex_q()
     {
         seq = i + 1;
         cout << seq << ". " << muti_questions_list[i].str_question << endl;
-        muti_questions_list[i].muti_user_input_then_adjust_scoreboard();
+        int ret = muti_questions_list[i].muti_user_input_then_adjust_scoreboard();
+        if (ret == 1)
+            i--;
     }
     return 0;
 }
@@ -343,7 +346,7 @@ int envir_req()
         cout << "Others OS not support yet!";
         return false;
     }
-    cout << "end of case 3 questions\n************************\n";
+    cout << "************************\n";
     cout << "This is your OS's informations" << endl;
     cout << "Distribution linux : " << ur_os->distribution << "\nDefault LSM : " << ur_os->lsm << "\nDefault File System : " << ur_os->de_fs << endl;
     if (ur_os->lsm == str_apparmor)
@@ -442,7 +445,7 @@ int envir_req()
     }
 
     cout << endl
-         << "The most suitable LSM is " << score_lsm_array[pos].lsm_name << endl
+         << "the_most_suitable LSM is " << score_lsm_array[pos].lsm_name << endl
          << endl;
     cout << "NOTE:" << endl;
     if ((score_lsm_array[num_apparmor].score < 0) && (abs(score_lsm_array[num_apparmor].score) > max))
@@ -477,7 +480,7 @@ void print_lsm_scoreboard()
     printf("LSM      %-20s%-21s%-16s%s\n", score_lsm_array[0].lsm_name, score_lsm_array[1].lsm_name, score_lsm_array[2].lsm_name, score_lsm_array[3].lsm_name);
     printf("score       %-20d%-20d%-20d%d\n", score_lsm_array[0].score, score_lsm_array[1].score, score_lsm_array[2].score, score_lsm_array[3].score);
 }
-int find_the_best_lsm()
+int find_the_most_suitable_lsm()
 {
     int max = -1, pos = -1;
     for (int i = 0; i < 4; i++)
@@ -490,45 +493,44 @@ int find_the_best_lsm()
     }
     return pos;
 }
-int gen_lsfet_report(string distrb_name, int dis_lsm_num)
+int gen_lsmet_report(string distrb_name, int dis_lsm_num)
 {
-    ofstream of("./lsfet_report");
+    ofstream of("./lsmet_report_dir/lsmet_report.txt", ofstream::app);
     stringstream ofstr;
-    of << "This is your LSFET report" << endl;
     int flag_dont_need_to_show_default_lsm = 0;
-    int the_best_lsm_num = find_the_best_lsm();
-    of << "After lsfet_lsm_score testing, the most suitable LSM is "
-       << score_lsm_array[the_best_lsm_num].lsm_name << endl
+    int the_most_suitable_lsm_num = find_the_most_suitable_lsm();
+    of << "After lsmet_scoring testing, the_most_suitable LSM is "
+       << score_lsm_array[the_most_suitable_lsm_num].lsm_name << endl
        << "It's score is "
-       << score_lsm_array[the_best_lsm_num].score << endl;
-    if (dis_lsm_num == the_best_lsm_num)
+       << score_lsm_array[the_most_suitable_lsm_num].score << endl;
+    if (dis_lsm_num == the_most_suitable_lsm_num)
     {
-        of << "And the best LSM is also the default LSM in your Distribution " << distrb_name << endl;
+        of << "And the_most_suitable LSM is also the default LSM in your Distribution " << distrb_name << endl;
         flag_dont_need_to_show_default_lsm = 1;
     }
     else
     {
-        of << "And your Distribution " << distrb_name << "'s  default LSM is " << ur_os->lsm << endl
+        of << "And your Distribution " << distrb_name << ", the default LSM is " << ur_os->lsm << endl
            << "It's score is " << score_lsm_array[dis_lsm_num].score << endl;
         flag_dont_need_to_show_default_lsm = 0;
     }
 
-    if (ur_os->distrib_kernel_lsm[the_best_lsm_num] == 0)
+    if (ur_os->distrib_kernel_lsm[the_most_suitable_lsm_num] == 0)
     {
-        of << "Unfortunately, your Distribution " << distrb_name << " doesn't not insert " << score_lsm_array[the_best_lsm_num].lsm_name
+        of << "Unfortunately, your Distribution " << distrb_name << " doesn't not insert " << score_lsm_array[the_most_suitable_lsm_num].lsm_name
            << " into the kernel" << endl
-           << "So you need to remake a new kernel that include " << score_lsm_array[the_best_lsm_num].lsm_name << endl;
+           << "So you need to remake a new kernel that include " << score_lsm_array[the_most_suitable_lsm_num].lsm_name << endl;
     }
     else
     {
-        of << "Fortunately, your Distribution " << distrb_name << " does insert " << score_lsm_array[the_best_lsm_num].lsm_name
+        of << "Fortunately, your Distribution " << distrb_name << " does insert " << score_lsm_array[the_most_suitable_lsm_num].lsm_name
            << " into the kernel" << endl
            << "So you don't need to remake a new kenerl" << endl;
     }
-
-    of << "We are starting to compare the best LSM and the default LSM based on your lsfet_lsm_score test"
-       << endl;
-    of << "There is your test and answer" << endl
+    of << "************************************************************************************" << endl;
+    of << "************************************************************************************" << endl;
+    of << "IV. Questionnaire analysis" << endl;
+    of << "Listing each test and your answer, and comparison of the differences between the most appropriate LSM and the default LSM based on your responses to \nthe lsmet_scoring test" << endl
        << endl;
     of << "/----------------------------------------/" << endl
        << "Class 1 - Trivial questions " << endl
@@ -542,8 +544,8 @@ int gen_lsfet_report(string distrb_name, int dis_lsm_num)
         if ((tf_questions_list[i].user_input == "t") || (tf_questions_list[i].user_input == "T"))
         {
             of << "----------" << endl
-               << "The best LSM " << score_lsm_array[the_best_lsm_num].lsm_name << " does " << endl;
-            if (tf_questions_list[i].ans[the_best_lsm_num][0])
+               << "the_most_suitable LSM " << score_lsm_array[the_most_suitable_lsm_num].lsm_name << " does " << endl;
+            if (tf_questions_list[i].ans[the_most_suitable_lsm_num][0])
                 of << "support and get " << tf_questions_list[i].weight << " point";
             else
                 of << "not support";
@@ -553,9 +555,9 @@ int gen_lsfet_report(string distrb_name, int dis_lsm_num)
                    << "----------" << endl
                    << "The default LSM " << score_lsm_array[dis_lsm_num].lsm_name << " does " << endl;
                 if (tf_questions_list[i].ans[dis_lsm_num][0])
-                    of << "support" << tf_questions_list[i].weight << " point";
+                    of << "support and get " << tf_questions_list[i].weight << " point";
                 else
-                    of << "not supports";
+                    of << "not support";
             }
         }
         of << endl;
@@ -571,46 +573,47 @@ int gen_lsfet_report(string distrb_name, int dis_lsm_num)
            << muti_questions_list[i].str_ques_description << endl
            << "Your answer is: " << muti_questions_list[i].user_input << endl
            << "----------" << endl;
-        string o1 = "", o2 = "";
+        string o1 = "", o2 = ""; // output, output1 for the most suitable, output2 for default lsm
 
         for (int k = 0; k < muti_questions_list[i].user_input.size(); k++)
         {
 
             int a = 0;
-            a = muti_questions_list[i].user_input[k] - '0';
+            a = muti_questions_list[i].user_input[k] - '0'; // get the value of user_input, ex. user_input=23, get 2 and transfer to int,
+                                                            // then check ans correspond to 2 option
             if (a > 0)
             {
 
-                if (muti_questions_list[i].ans[the_best_lsm_num][a-1] == 1)
+                if (muti_questions_list[i].ans[the_most_suitable_lsm_num][a - 1] == 1)
                 {
-                    o1 += muti_questions_list[i].user_input[k];
-                    muti_questions_list[i].ans[the_best_lsm_num][a-1] = -1;
+                    o1 += muti_questions_list[i].user_input[k]; // o1 to record userinput that fit answer of the most suitable lsm
+                    muti_questions_list[i].ans[the_most_suitable_lsm_num][a - 1] = -1;
                 }
                 if (!flag_dont_need_to_show_default_lsm)
                 {
-                    if (muti_questions_list[i].ans[dis_lsm_num][a-1] == 1)
+                    if (muti_questions_list[i].ans[dis_lsm_num][a - 1] == 1)
                     {
                         o2 += muti_questions_list[i].user_input[k];
-                        muti_questions_list[i].ans[dis_lsm_num][a-1] = -1;
+                        muti_questions_list[i].ans[dis_lsm_num][a - 1] = -1;
                     }
                 }
             }
         }
         for (int j = 0; j < muti_questions_list[i].options_num; j++)
         {
-            if (muti_questions_list[i].ans[the_best_lsm_num][j] == -1)
-                muti_questions_list[i].ans[the_best_lsm_num][j] = 1;
+            if (muti_questions_list[i].ans[the_most_suitable_lsm_num][j] == -1)
+                muti_questions_list[i].ans[the_most_suitable_lsm_num][j] = 1;
             if (muti_questions_list[i].ans[dis_lsm_num][j] == -1)
                 muti_questions_list[i].ans[dis_lsm_num][j] = 1;
         }
         if (o1 != "")
-            of << "The best LSM " << endl
-               << score_lsm_array[the_best_lsm_num].lsm_name << endl
+            of << "the_most_suitable LSM " << endl
+               << score_lsm_array[the_most_suitable_lsm_num].lsm_name << endl
                << "supports " << o1 << endl
                << "----------" << endl;
         else
-            of << "The best LSM " << endl
-               << score_lsm_array[the_best_lsm_num].lsm_name << endl
+            of << "the_most_suitable LSM " << endl
+               << score_lsm_array[the_most_suitable_lsm_num].lsm_name << endl
                << "does not support any of your requirements"
                << endl
                << "----------" << endl;
@@ -629,7 +632,8 @@ int gen_lsfet_report(string distrb_name, int dis_lsm_num)
                    << "----------" << endl;
         }
     }
-    of << "************************************************" << endl;
+    of << "************************************************************************************" << endl;
+    of << "************************************************************************************" << endl;
     of.close();
     return 1;
 }

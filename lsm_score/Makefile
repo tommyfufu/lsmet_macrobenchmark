@@ -1,9 +1,15 @@
-ALL:lsfet_lsm_score clean
+ALL : lsmet_scoring lsmet clean_o
 CC = g++
 CFLAG = -I.
-.PHONY: all clean
 
-lsfet_lsm_score: lsfet_lsm_score.o
-	${CC} lsfet_lsm_score.o -o lsfet_lsm_score ${CFLAG}
+lsmet: lsmet.o
+	${CC} lsmet.o -o lsmet ${CFLAG}
+
+lsmet_scoring: lsmet_scoring.o
+	${CC} lsmet_scoring.o -o lsmet_scoring ${CFLAG}
+
+.PHONY: all clean
 clean:
-	rm -f *.o *.exe
+	rm -f *.o lsmet lsmet_scoring
+clean_o:
+	rm -f *.o 

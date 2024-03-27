@@ -1,0 +1,136 @@
+I. Introduction of SELinux
+    SELinux is a security enhancement to Linux which allows users and administrators more control over access control.
+    Access can be constrained on such variables as which users and applications can access which resources. 
+    These resources may take the form of files. Standard Linux access controls, such as file modes (-rwxr-xr-x) are modifiable by the user and the applications which the user runs. 
+    Conversely, SELinux access controls are determined by a policy loaded on the system which may not be changed by careless users or misbehaving applications.
+    SELinux also adds finer granularity to access controls. Instead of only being able to specify who can read, write or execute a file, 
+    for example, SELinux lets you specify who can unlink, append only, move a file and so on. 
+    SELinux allows you to specify access to many resources other than files as well, such as network resources and interprocess communication (IPC).
+
+    Official website: http://www.selinuxproject.org/page/Main_Page
+    Official Documentation: http://www.selinuxproject.org/page/AdminDocs
+    
+************************************************************************************************************************************************************************
+II. Introduction of minor Linux Security Module (can coexist with other LSMs)
+1. Capabilities
+    The LSM kernel patch moves most of the existing POSIX.1e capabilities logic into an optional security module stored in the file security/capability.c. 
+    This change allows users who do not want to use capabilities to omit this code entirely from their kernel, 
+    instead using the dummy module for traditional superuser logic or any other module that they desire. 
+    This change also allows the developers of the capabilities logic to maintain and enhance their code more freely, without needing to integrate patches back into the base kernel.
+2. Lockdown
+    The Kernel Lockdown feature is designed to prevent both direct and indirect access to a running kernel image, attempting to protect against unauthorized modification of 
+    the kernel image and to prevent access to security and cryptographic data located in kernel memory, whilst still permitting driver modules to be loaded.
+3. Yama
+    Yama is a Linux Security Module that collects system-wide DAC security protections that are not handled by the core kernel itself. 
+    This is selectable at build-time with CONFIG_SECURITY_YAMA, and can be controlled at run-time through sysctls in /proc/sys/kernel/yama
+4. LoadPin
+    LoadPin is a Linux Security Module that ensures all kernel-loaded files (modules, firmware, etc) all originate from the same filesystem, 
+    with the expectation that such a filesystem is backed by a read-only device such as dm-verity or CDROM. 
+    This allows systems that have a verified and/or unchangeable filesystem to enforce module and firmware loading restrictions without needing to sign the files individually.
+5. SafeSetID
+    SafeSetID is an LSM module that gates the setid family of syscalls to restrict UID/GID transitions from a given UID/GID to only those approved by a system-wide allowlist. 
+    These restrictions also prohibit the given UIDs/GIDs from obtaining auxiliary privileges associated with CAP_SET{U/G}ID, such as allowing a user to set up user namespace 
+    UID/GID mappings.
+************************************************************************************************************************************************************************
+III. How to install SELinux on your distribution
+Alpine:
+    Because Alpine kernel does not have SELinux inserted, you need to remake the kernel with SELinux
+    Alpine How To Make Custom Kernel reference website: https://wiki.alpinelinux.org/wiki/Custom_Kernel
+
+    Alpine Linux packages (apk) main repository doesn't not provide SE-Tools, there is one solution
+    1. reference: https://github.com/SELinuxProject/setools
+centOS:
+    SELinux is the default LSM of Ubuntu or other Debian-based distributions , you can use yum or rpm to install setools (some managing tools)
+    
+Ubuntu:
+    Ubuntu does have SELinux inserted, so you don't need to remake the kernel with SELinux, just need to disable AppArmor, and then enable SELinux
+    reference: http://www.selinuxproject.org/page/Guide/Installation
+    you can use apt or apt-get to install selinux dependencies, such as se-tools (some managing tools)
+************************************************************************************
+************************************************************************************
+IV. Questionnaire analysis
+Listing each question and SELinux answer
+
+/----------------------------------------/
+Class 1 - Trivial questions 
+/----------------------------------------/
+----------------------------------------
+1. Want LSM has default policy? [T/F]
+Description: LSM provides default policy
+Ans: Yes
+Note: SELinux provides two policies, one is target (as default policy for most situation) and the other is MLS.
+
+----------------------------------------
+2. Want LSM to suppor Automatically generate policies? [T/F]
+Description: LSM provides the ability to automatically generate policies (i.e. learning mode and enforcing mode)?
+Ans: Yes
+Note: SELinux provides audit2allow tool
+
+----------------------------------------
+3. Want LSM to support fine tuning policy based on log? [T/F]
+Description: LSM provides features that allow users to fine-tune access permissions (e.g. aa-logprof from AppArmor, audit2allow form selinux)
+Ans: Yes
+Note: audit2allow
+
+----------------------------------------
+4. Want LSM to be able to support dynamically load policy? [T/F]
+Description: Load or use new policy without reboot
+Ans: No.
+
+----------------------------------------
+5. Want LSM to support caches? [T/F]
+Description: Recording the access behavior through the cache can speed up the confirmation of access rights. In addition, the access behavior of the same object and subject 
+usually occurs multiple times in a short period of time, so the caching mechanism can greatly speed up the confirmation speed of access rights.
+Ans: Yes
+Note: One of the features of SELinux
+
+----------------------------------------
+6. Want LSM to support security auditing? [T/F]
+Description: Provides additional auditing capabilities
+Ans: Yes
+
+----------------------------------------
+7. Want LSM to supports configurable audit? [T/F]
+Description: Auditing can be tuned for more fine-grained record access behavior
+Ans: Yes
+
+----------------------------------------
+8. Want LSM to support whitelist? [T/F]
+Description: Provides a whitelist function to comply with the principle of least privilege as much as possible
+Ans: Yes
+
+----------------------------------------
+9. Want LSM to support trust path execution? [T/F]
+Description: Provides Path Trust Execution (PTE) functionality to revoke a program's permission to use system calls (e.g. exec())
+Ans: Yes
+
+----------------------------------------
+10. Want LSM to support sandbox? [T/F]
+Description: LSM can assist in establishing a sandbox environment
+Ans: Yes
+
+----------------------------------------
+11. Want LSM to have security certifications? [T/F]
+Description: Such as passing CAPP, EAL, LSPP and other security verification
+Ans: Yes
+
+----------------------------------------
+12. Want LSM to support memory protection? [T/F]
+Description: LSM can shield important program and/or kernel structures from tampering via memory interfaces such as mmap(2), /dev/kmem, or even via stack overruns
+Ans: Yes
+
+************************************************
+/----------------------------------------/
+Class 2 - Complex questions 
+/----------------------------------------/
+----------------------------------------
+1. Which security models do you want? [0]none [1]DTE [2]FLASK [3]MLS [4]RBAC
+Description: Domain Type Enforcement (DTE), The Flux Advanced Security Kernel (FLASK), Multi-level Security (MLS), Role-based access control (RBAC)
+Ans: SELinux supports [1]DTE [2]FLASK [3]MLS [4]RBAC
+
+----------------------------------------
+2. Which virtualization technique do you want to support? [0]none [1]Docker [2]KVM [3]libvirt [4]QEMU [5]sVirt [6]Xen
+Description: LSM official website provides security support for specific virtualization technologies
+Ans: SELinux supports [2]KVM [3]libvirt [4]QEMU [5]sVirt [6]Xen
+************************************************************************************
+************************************************************************************

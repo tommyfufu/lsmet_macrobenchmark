@@ -1,0 +1,135 @@
+I. Introduction of Smack
+    Smack is the Simplified Mandatory Access Control Kernel. 
+    Smack is a kernel based implementation of mandatory access control that includes simplicity in its primary design goals.
+    Smack is not the only Mandatory Access Control scheme available for Linux. 
+    Those new to Mandatory Access Control are encouraged to compare Smack with the other mechanisms available to determine which is best suited to the problem at hand.
+
+    Official website: https://github.com/smack-team
+    Official Documentation: https://www.kernel.org/doc/html/v4.18/admin-guide/LSM/Smack.html
+
+************************************************************************************************************************************************************************
+II. Introduction of minor Linux Security Module (can coexist with other LSMs)
+1. Capabilities
+    The LSM kernel patch moves most of the existing POSIX.1e capabilities logic into an optional security module stored in the file security/capability.c. 
+    This change allows users who do not want to use capabilities to omit this code entirely from their kernel, 
+    instead using the dummy module for traditional superuser logic or any other module that they desire. 
+    This change also allows the developers of the capabilities logic to maintain and enhance their code more freely, without needing to integrate patches back into the base kernel.
+2. Lockdown
+    The Kernel Lockdown feature is designed to prevent both direct and indirect access to a running kernel image, attempting to protect against unauthorized modification of 
+    the kernel image and to prevent access to security and cryptographic data located in kernel memory, whilst still permitting driver modules to be loaded.
+3. Yama
+    Yama is a Linux Security Module that collects system-wide DAC security protections that are not handled by the core kernel itself. 
+    This is selectable at build-time with CONFIG_SECURITY_YAMA, and can be controlled at run-time through sysctls in /proc/sys/kernel/yama
+4. LoadPin
+    LoadPin is a Linux Security Module that ensures all kernel-loaded files (modules, firmware, etc) all originate from the same filesystem, 
+    with the expectation that such a filesystem is backed by a read-only device such as dm-verity or CDROM. 
+    This allows systems that have a verified and/or unchangeable filesystem to enforce module and firmware loading restrictions without needing to sign the files individually.
+5. SafeSetID
+    SafeSetID is an LSM module that gates the setid family of syscalls to restrict UID/GID transitions from a given UID/GID to only those approved by a system-wide allowlist. 
+    These restrictions also prohibit the given UIDs/GIDs from obtaining auxiliary privileges associated with CAP_SET{U/G}ID, such as allowing a user to set up user namespace 
+    UID/GID mappings.
+************************************************************************************************************************************************************************
+III. How to install Smack on your distribution
+Alpine:
+    Because Alpine kernel does not have Smack inserted, you need to remake the kernel with Smack
+    Alpine How To Make Custom Kernel reference website: https://wiki.alpinelinux.org/wiki/Custom_Kernel
+
+    Alpine Linux packages (apk) main repository doesn't not provide Smack tools, there is one solution
+    1. Download tool packages from Smack official website, https://github.com/smack-team
+
+centOS:
+    Because centOS kernel does not have Smack inserted, you need to remake the kernel with Smack
+    centOS How To Make Kernel: https://www.tecmint.com/compile-linux-kernel-on-centos-7/
+    
+    centOS packages (yum) (rpk) main repository doesn't not provide Smack tools, there is one solutions
+    1. Download tool packages from Smack official website, https://github.com/smack-team
+Ubuntu:
+    Ubuntu does have Smack inserted, so you don't need to remake the kernel with Smack
+    reference: https://github.com/smack-team/smack
+
+************************************************************************************
+************************************************************************************
+IV. Questionnaire analysis
+Listing each question and Smack answer
+
+/----------------------------------------/
+Class 1 - Trivial questions 
+/----------------------------------------/
+----------------------------------------
+1. Want LSM has default policy? [T/F]
+Description: LSM provides default policy
+Ans: Yes
+Note: Policy fusion MLS and TE, which is a major feature of smack
+
+----------------------------------------
+2. Want LSM to suppor Automatically generate policies? [T/F]
+Description: LSM provides the ability to automatically generate policies (i.e. learning mode and enforcing mode)?
+Ans: No
+
+----------------------------------------
+3. Want LSM to support fine tuning policy based on log? [T/F]
+Description: LSM provides features that allow users to fine-tune access permissions (e.g. aa-logprof from AppArmor, audit2allow form SELinux)
+Ans: No
+
+----------------------------------------
+4. Want LSM to be able to support dynamically load policy? [T/F]
+Description: Load or use new policy without reboot
+Ans: Yes
+
+----------------------------------------
+5. Want LSM to support caches? [T/F]
+Description: Recording the access behavior through the cache can speed up the confirmation of access rights. In addition, the access behavior of the same object and subject 
+usually occurs multiple times in a short period of time, so the caching mechanism can greatly speed up the confirmation speed of access rights.
+Ans: No
+
+----------------------------------------
+6. Want LSM to support security auditing? [T/F]
+Description: Provides additional auditing capabilities
+Ans: Yes
+
+----------------------------------------
+7. Want LSM to supports configurable audit? [T/F]
+Description: Auditing can be tuned for more fine-grained record access behavior
+Ans: Yes
+
+----------------------------------------
+8. Want LSM to support whitelist? [T/F]
+Description: Provides a whitelist function to comply with the principle of least privilege as much as possible
+Ans: No
+
+----------------------------------------
+9. Want LSM to support trust path execution? [T/F]
+Description: Provides Path Trust Execution (PTE) functionality to revoke a program's permission to use system calls (e.g. exec())
+Ans: No
+
+----------------------------------------
+10. Want LSM to support sandbox? [T/F]
+Description: LSM can assist in establishing a sandbox environment
+Ans: No
+
+----------------------------------------
+11. Want LSM to have security certifications? [T/F]
+Description: Such as passing CAPP, EAL, LSPP and other security verification
+Ans: No
+
+----------------------------------------
+12. Want LSM to support memory protection? [T/F]
+Description: LSM can shield important program and/or kernel structures from tampering via memory interfaces such as mmap(2), /dev/kmem, or even via stack overruns
+Ans: Yes
+
+************************************************
+/----------------------------------------/
+Class 2 - Complex questions 
+/----------------------------------------/
+----------------------------------------
+1. Which security models do you want? [0]none [1]DTE [2]FLASK [3]MLS [4]RBAC
+Description: Domain Type Enforcement (DTE), The Flux Advanced Security Kernel (FLASK), Multi-level Security (MLS), Role-based access control (RBAC)
+Ans: Smack supports [1]DTE [3]MLS
+
+----------------------------------------
+2. Which virtualization technique do you want to support? [0]none [1]Docker [2]KVM [3]libvirt [4]QEMU [5]sVirt [6]Xen
+Description: LSM official website provides security support for specific virtualization technologies
+Ans: Smack does not support any of options
+
+************************************************************************************
+************************************************************************************
